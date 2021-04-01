@@ -1,6 +1,6 @@
 <mat-card>
     <h1>Upload new file</h1>
-    <form #fileForm [action]="gcsUploadUrl" method="post" enctype="multipart/form-data">
+    <form #fileForm [action]="gcsUrlPrefix" method="post" enctype="multipart/form-data">
         <input type="text" name="key" [value]="basename(file.value)" />
         <input #file name="file" type="file" />
         <button mat-raised-button color="primary" type="submit" (click)="fileForm.submit()">UPLOAD</button>

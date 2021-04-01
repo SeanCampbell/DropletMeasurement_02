@@ -39,10 +39,10 @@ const PAUSE_TEXT = 'pause';
 export class MeasureComponent {
   title = 'droplet-measurement';
 
-  private units = ['um', 'mm', 'cm'];
-  private measurements: Measurement[] = [];
   private startTimeSeconds = 0;
-  private fileUrl = '';
+  public units = ['um', 'mm', 'cm'];
+  public measurements: Measurement[] = [];
+  public fileUrl = '';
 
   private MEASUREMENT_HEADERS = [
       'ID', 'Time Stamp', 'Adjusted Time', 'Droplet 1 Radius',
@@ -50,7 +50,7 @@ export class MeasureComponent {
       'Total Volume', 'DIB Radius', 'Contact Angle', 'Radial Distance'
   ];
 
-  private displayedColumns = [
+  public displayedColumns = [
       'id', 'timestamp', 'adjustedTimestamp', 'droplet1Radius', 'droplet1Volume',
        'droplet2Radius', 'droplet2Volume', 'totalVolume', 'dibRadius', 'contactAngle',
        'radialDistance',
@@ -82,7 +82,7 @@ export class MeasureComponent {
       this.video.nativeElement.crossOrigin = "Anonymous";
   }
 
-  private setAutoFindScale(event) {
+  public setAutoFindScale(event) {
       this.dropletCanvas.setAutoFindScale(event.checked);
       this.dropletCanvas.update();
   }
@@ -91,19 +91,19 @@ export class MeasureComponent {
       this.fileUrl = fileUrl;
   }
 
-  private skipForward() {
+  public skipForward() {
       this.video.nativeElement.currentTime += this.timeSkipSeconds;
   }
 
-  private stepForward() {
+  public stepForward() {
       this.video.nativeElement.currentTime += 0.01;
   }
 
-  private skipBackward() {
+  public skipBackward() {
       this.video.nativeElement.currentTime -= this.timeSkipSeconds;
   }
 
-  private stepBackward() {
+  public stepBackward() {
       this.video.nativeElement.currentTime -= 0.01;
   }
   private commit() {
@@ -280,7 +280,7 @@ export class MeasureComponent {
       return data;
 }
 
-  private commitAndNext() {
+  public commitAndNext() {
       this.commit();
       this.skipForward();
   }
@@ -293,7 +293,7 @@ export class MeasureComponent {
       return csvContent;
   }
 
-  private downloadCsv() {
+  public downloadCsv() {
       const csvContent = this.generateCsv();
       const encodedUri = encodeURI(csvContent);
       let link = document.createElement('a');
@@ -307,7 +307,7 @@ export class MeasureComponent {
       return filePath.split(/[\/\\]/).pop().split('.').shift() + '.csv';
   }
 
-  private togglePlayPause() {
+  public togglePlayPause() {
       if (this.playPause === PLAY_TEXT) {
           this.video.nativeElement.play();
           this.playPause = PAUSE_TEXT;
