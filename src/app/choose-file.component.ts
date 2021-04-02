@@ -17,9 +17,11 @@ interface ItemData {
 })
 export class ChooseFileComponent {
     private files = new Map();
-    private bucketName = 'spc-droplet-measurement-test';
-    private gcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + this.bucketName + '/o';
-    public gcsUrlPrefix = 'https://' + this.bucketName + '.storage.googleapis.com/';
+    private readBucketName = 'droplet-measurement-processed-public';
+    private writeBucketName = 'droplet-measurement-public';
+    private readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + this.readBucketName + '/o';
+    private readGcsUrlPrefix = 'https://' + this.readBucketName + '.storage.googleapis.com/';
+    public writeGcsUrlPrefix = 'https://' + this.writeBucketName + '.storage.googleapis.com/';
 
     @ViewChild('fileSelection', {static: true}) private selectionList: MatSelectionList;
 
@@ -50,12 +52,12 @@ export class ChooseFileComponent {
         this.files = new Map();
         this.getFiles().subscribe((data: ItemData) => {
             data.items.forEach((item) => {
-                this.files.set(item.name, this.gcsUrlPrefix + item.name); //item.selfLink);
+                this.files.set(item.name, this.readGcsUrlPrefix + item.name); //item.selfLink);
             });
         });
     }
 
     private getFiles() {
-        return this.http.get(this.gcsUrl);
+        return this.http.get(this.readGcsUrl);
     }
 }
