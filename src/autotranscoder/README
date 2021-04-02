@@ -1,0 +1,33 @@
+conda create --name droplet-measurement
+source activate droplet-measurement
+
+gcloud config set project droplet-measurement-309203
+gcloud builds submit --tag gcr.io/droplet-measurement-309203/autotranscoder
+gcloud run deploy autotranscoder --image gcr.io/droplet-measurement-309203/autotranscoder
+# https://autotranscoder-rmwldd2aha-wl.a.run.app
+
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/droplet-measurement/src/autotranscoder/droplet-measurement-309203-5841dc66a9a8.json
+gcloud auth application-default print-access-token
+
+curl -X GET \
+-H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+https://transcoder.googleapis.com/v1beta1/projects/870356666884/locations/us-central1/jobs/f9f91235e76ced7d6e9a979a55a271cd
+
+gcloud projects add-iam-policy-binding droplet-measurement-309203 \
+     --member=serviceAccount:service-870356666884@gcp-sa-pubsub.iam.gserviceaccount.com \
+     --role=roles/iam.serviceAccountTokenCreator
+
+gcloud iam service-accounts create cloud-run-pubsub-invoker \
+    --display-name "Cloud Run Pub/Sub Invoker"
+
+gcloud run services add-iam-policy-binding autotranscoder \
+    --member=serviceAccount:cloud-run-pubsub-invoker@droplet-measurement-309203.iam.gserviceaccount.com \
+    --role=roles/run.invoker
+
+gcloud pubsub subscriptions create fileUploadSubscription --topic fileUpload \
+    --push-endpoint=https://autotranscoder-rmwldd2aha-wl.a.run.app/ \
+    --push-auth-service-account=cloud-run-pubsub-invoker@droplet-measurement-309203.iam.gserviceaccount.com
+
+gsutil notification create -t fileUpload -f json gs://droplet-measurement-public
+
+# gcloud run deploy autotranscoder --image gcr.io/droplet-measurement-309203/autotranscoder --set-env-vars=WRITE_BUCKET=droplet-measurement-processed-public
