@@ -6,6 +6,14 @@ import { switchMap, takeUntil, pairwise } from 'rxjs/operators'
 
 type Point = {'x': number, 'y': number};
 
+
+class ItemData {
+    public cx: number[];
+    public cy: number[];
+    public radii: number[];
+}
+
+
 @Component({
   selector: 'droplet-canvas',
   template: '<canvas #canvas></canvas>',
@@ -24,14 +32,14 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   private shouldAutoFindScale: boolean;
   private shouldAutoFindDroplets: boolean = true;
-  private scaleFactor: int = 1;
+  private scaleFactor: number = 1;
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 
   // @Input() private width = 1920/2;
   // @Input() private height = 1080/2;
-  @Input() private width: int = 1952/this.scaleFactor;
-  @Input() private height: int = 1952/this.scaleFactor;
+  @Input() private width: number = 1952/this.scaleFactor;
+  @Input() private height: number = 1952/this.scaleFactor;
   @Input() private background: HTMLVideoElement;
 
   constructor(private http: HttpClient) {
