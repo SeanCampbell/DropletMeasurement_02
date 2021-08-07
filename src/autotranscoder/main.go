@@ -111,6 +111,7 @@ func createJobFromPreset(inputURI string) error {
                                 FilePrefix: "droplet-frame",
                                 ColumnCount: 1,
                                 RowCount: 1,
+                                // TODO: Don't hardcode width, height, start time offset, or interval.
                                 SpriteWidthPixels: 1952,
                                 SpriteHeightPixels: 1952,
                                 StartTimeOffset: &duration.Duration{
