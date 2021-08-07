@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HttpClientJsonpModule } from '@angular/common/http';
 import { MatButtonModule, MatCardModule, MatCheckboxModule, MatIconModule, MatInputModule, MatSelectModule, MatListModule, MatTableModule } from '@angular/material';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -28,6 +28,7 @@ import { MeasureComponent } from './measure.component';
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
+    HttpClientJsonpModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -36,6 +37,7 @@ import { MeasureComponent } from './measure.component';
     MatSelectModule,
     MatListModule,
     MatTableModule,
+    ReactiveFormsModule,
   ],
   providers: [
     ChooseFileService,

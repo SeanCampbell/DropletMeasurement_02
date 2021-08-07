@@ -8,6 +8,8 @@ import (
         "log"
         "net/http"
         "os"
+        "path"
+        "strings"
 
         transcoder "cloud.google.com/go/video/transcoder/apiv1beta1"
         transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1beta1"
@@ -59,6 +61,7 @@ func createJobFromPreset(inputURI string) error {
         projectID := "droplet-measurement-309203"
         location := "us-central1"
         // inputURI := "gs://my-bucket/my-video-file"
+        outputName := strings.Split(path.Base(inputURI), ".")[0]
         outputURI := "gs://droplet-measurement-processed-public/processed/"
         // preset := "preset/web-hd"
         ctx := context.Background()
@@ -90,11 +93,14 @@ func createJobFromPreset(inputURI string) error {
                                     VideoStream: &transcoderpb.VideoStream{
                                         BitrateBps: 500000,
                                         FrameRate: 30,
+                                        RateControlMode: "vbr",
+                                        EnableTwoPass: true,
+                                        CrfLevel: 10,
                                     },
                                 },
                             }},
                             MuxStreams: []*transcoderpb.MuxStream{{
-                                Key: "video-only-sd",
+                                Key: outputName,
                                 Container: "mp4",
                                 ElementaryStreams: []string{"video-stream0"},
                             }},

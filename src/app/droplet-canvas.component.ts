@@ -1,3 +1,4 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import * as Tesseract from 'tesseract.js';
 import { fromEvent } from 'rxjs';
@@ -16,17 +17,26 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   @ViewChild('canvas', {static: false}) private canvas: ElementRef;
 
-  @Input() private width = 1920/2;
-  @Input() private height = 1080/2;
-  @Input() private background: HTMLVideoElement;
-
   private ctx: CanvasRenderingContext2D;
 
   private handles: Array<{center: Handle, edge: Handle}>;
   private activeHandle: Handle;
 
   private shouldAutoFindScale: boolean;
-  private isReadingImage = false;;
+  private shouldAutoFindDroplets: boolean = true;
+  private scaleFactor: int = 1;
+  private isReadingImage: boolean = false;
+  private dropletDetectURL: string = 'http://localhost:8080';
+
+  // @Input() private width = 1920/2;
+  // @Input() private height = 1080/2;
+  @Input() private width: int = 1952/this.scaleFactor;
+  @Input() private height: int = 1952/this.scaleFactor;
+  @Input() private background: HTMLVideoElement;
+
+  constructor(private http: HttpClient) {
+
+  }
 
   public setBackground(background: HTMLVideoElement) {
     this.background = background;
@@ -38,6 +48,10 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   public setAutoFindScale(autoFind: boolean) {
       this.shouldAutoFindScale = autoFind;
+  }
+
+  public setAutoFindDroplets(autoFind: boolean) {
+      this.shouldAutoFindDroplets = autoFind;
   }
 
   public ngAfterViewInit() {
@@ -113,7 +127,7 @@ export class DropletCanvasComponent implements AfterViewInit {
             this.canvas.nativeElement, 'eng',
             {
                 logger: m => console.log(m),
-                //rectangle: { left: 0, top:400, width: 200, height: 200 },
+                // rectangle: { left: 0, top:400, width: 200, height: 200 },
             }
         ).then((r) => {
             const liveTimeMatches = liveTimeRegexp.exec(r.data.text);
@@ -131,7 +145,8 @@ export class DropletCanvasComponent implements AfterViewInit {
       // Manipulating video image reference:
       // https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Manipulating_video_using_canvas
       const searchAreaSize = 300;
-      const threshold = 50;
+      const threshold = 150;
+      // const threshold = 50;
       const frame = this.ctx.getImageData(
           this.width - searchAreaSize, this.height - searchAreaSize,
           searchAreaSize, searchAreaSize);
@@ -140,13 +155,15 @@ export class DropletCanvasComponent implements AfterViewInit {
           let r = frame.data[i * 4 + 0];
           let g = frame.data[i * 4 + 1];
           let b = frame.data[i * 4 + 2];
-          if (r < threshold && g < threshold && b < threshold) {
+          // if (r < threshold && g < threshold && b < threshold) {
+          if (r > threshold && g > threshold && b > threshold) {
               const xOffset = this.width - searchAreaSize;
               const yOffset = this.height - searchAreaSize;
               this.handles[0]['edge'].x = xOffset + (i % searchAreaSize);
               this.handles[0]['edge'].y = yOffset + (i / searchAreaSize);
 
-              while (r < threshold && g < threshold && b < threshold) {
+              // while (r < threshold && g < threshold && b < threshold) {
+              while (r > threshold && g > threshold && b > threshold) {
                   i--;
                   r = frame.data[i * 4 + 0];
                   g = frame.data[i * 4 + 1];
@@ -160,6 +177,23 @@ export class DropletCanvasComponent implements AfterViewInit {
               break;
           }
       }
+  }
+
+  private autoFindDroplets() {
+      // console.log(this.canvas.nativeElement.toDataURL());
+      let results = this.http.post(
+          this.dropletDetectURL, {responseType: 'json', imageData: this.canvas.nativeElement.toDataURL()});
+      results.subscribe((data: ItemData) => {
+          console.log('### moving handles', data.cx, data.cy, data.radii);
+          this.handles[1]['center'].x = data.cx[0] / this.scaleFactor;
+          this.handles[1]['center'].y = data.cy[0] / this.scaleFactor;
+          this.handles[1]['edge'].x = data.cx[0] / this.scaleFactor;
+          this.handles[1]['edge'].y = (data.cy[0] - data.radii[0]) / this.scaleFactor;
+          this.handles[2]['center'].x = data.cx[1] / this.scaleFactor;
+          this.handles[2]['center'].y = data.cy[1] / this.scaleFactor;
+          this.handles[2]['edge'].x = data.cx[1] / this.scaleFactor;
+          this.handles[2]['edge'].y = (data.cy[1] - data.radii[1]) / this.scaleFactor;
+      });
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -254,6 +288,9 @@ export class DropletCanvasComponent implements AfterViewInit {
 
           if (this.shouldAutoFindScale) {
               this.autoFindScale();
+          }
+          if (this.shouldAutoFindDroplets) {
+              this.autoFindDroplets();
           }
           this.readImage();
       }
