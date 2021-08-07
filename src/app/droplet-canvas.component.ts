@@ -32,14 +32,14 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   private shouldAutoFindScale: boolean;
   private shouldAutoFindDroplets: boolean = true;
-  private scaleFactor: number = 1;
+  private scaleFactor: number = 2; //1;
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 
-  // @Input() private width = 1920/2;
-  // @Input() private height = 1080/2;
-  @Input() private width: number = 1952/this.scaleFactor;
-  @Input() private height: number = 1952/this.scaleFactor;
+  @Input() private width = 1920/this.scaleFactor;
+  @Input() private height = 1080/this.scaleFactor;
+  // @Input() private width: number = 1952/this.scaleFactor;
+  // @Input() private height: number = 1952/this.scaleFactor;
   @Input() private background: HTMLVideoElement;
 
   constructor(private http: HttpClient) {
