@@ -16,38 +16,7 @@ import (
         transcoderpb "google.golang.org/genproto/googleapis/cloud/video/transcoder/v1beta1"
 )
 
-// https://cloud.google.com/transcoder/docs/concepts/config-examples
-// {
-//     "config": {
-//       "inputs": [
-//         {
-//           "key": "input0",
-//           "uri": "%s%s",
-//         },
-//       ],
-//       "elementaryStreams": [
-//         {
-//           "videoStream": {
-//             "bitrateBps": 500000,
-//             "frameRate": 30,
-//           },
-//           "key": "video-stream0"
-//         },
-//       ],
-//       "muxStreams": [
-//         {
-//           "key": "video-only-sd",
-//           "container": "mp4",
-//           "elementaryStreams": [
-//             "video-stream0"
-//           ]
-//         },
-//       ],
-//       "output": {
-//         "uri": "%s",
-//       },
-//     },
-// }
+
 
 type GCSEvent struct {
 	Bucket string `json:"bucket"`
@@ -57,8 +26,9 @@ type GCSEvent struct {
 // createJobFromPreset creates a job based on a given preset template. See
 // https://cloud.google.com/transcoder/docs/how-to/jobs#create_jobs_presets
 // for more information.
+// https://cloud.google.com/transcoder/docs/concepts/config-examples
 // func createJobFromPreset(projectID string, location string, inputURI string, outputURI string, preset string) error {
-func createJobFromPreset(inputURI string) error {
+func processVideo(inputURI string) error {
     log.Printf("Creating job...")
     projectID := "droplet-measurement-309203"
     location := "us-central1"
@@ -125,6 +95,9 @@ func createJobFromPreset(inputURI string) error {
 
                             },
                         },
+                        PubsubDestination: &transcoderpb.PubsubDestination{
+                            Topic: "projects/droplet-measurement-309203/topics/videoProcessed",
+                        },
                         Output: &transcoderpb.Output {
                             Uri: outputURI,
                         },
@@ -155,9 +128,9 @@ type PubSubMessage struct {
         Subscription string `json:"subscription"`
 }
 
-// HelloPubSub receives and processes a Pub/Sub push message.
-func HelloPubSub(w http.ResponseWriter, r *http.Request) {
-    log.Printf("Running HelloPubSub...")
+// HandleRequest receives and processes a Pub/Sub push message.
+func HandleRequest(w http.ResponseWriter, r *http.Request) {
+    log.Printf("Running HandleRequest...")
     var m PubSubMessage
     body, err := ioutil.ReadAll(r.Body)
     if err != nil {
@@ -165,12 +138,14 @@ func HelloPubSub(w http.ResponseWriter, r *http.Request) {
             http.Error(w, "Bad Request", http.StatusBadRequest)
             return
     }
+    log.Printf("Message body: %s", body)
     if err := json.Unmarshal(body, &m); err != nil {
             log.Printf("json.Unmarshal: %v", err)
             http.Error(w, "Bad Request", http.StatusBadRequest)
             return
     }
 
+    log.Printf("Message data: %s", m.Message.Data)
     var e GCSEvent
     if err := json.Unmarshal(m.Message.Data, &e); err != nil {
             log.Printf("json.Unmarshal: %v", err)
@@ -179,14 +154,14 @@ func HelloPubSub(w http.ResponseWriter, r *http.Request) {
     }
 
     log.Printf("Calling createJobFromPreset...")
-    if err := createJobFromPreset(fmt.Sprintf("gs://%s/%s", e.Bucket, e.Name)); err != nil {
+    if err := processVideo(fmt.Sprintf("gs://%s/%s", e.Bucket, e.Name)); err != nil {
         log.Printf("Error creating job: %v", err)
     }
     log.Printf("event: %v", e)
 }
 
 func main() {
-        http.HandleFunc("/", HelloPubSub)
+        http.HandleFunc("/", HandleRequest)
         // Determine port for HTTP service.
         port := os.Getenv("PORT")
         if port == "" {

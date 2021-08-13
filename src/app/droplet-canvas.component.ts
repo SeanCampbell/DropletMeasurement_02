@@ -1,3 +1,8 @@
+// TODO:
+// - Change background to support image instead of video.
+// - Add constructor that accepts handle positions.
+// - Allow disabling editing handles.
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import * as Tesseract from 'tesseract.js';
@@ -32,7 +37,7 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   private shouldAutoFindScale: boolean;
   private shouldAutoFindDroplets: boolean = true;
-  private scaleFactor: number = 2; //1;
+  private scaleFactor: number = 2.5; //1;
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 

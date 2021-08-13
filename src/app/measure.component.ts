@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { MatTable } from '@angular/material';
+import { MatDialog, MatDialogRef, MatTable } from '@angular/material';
 
 import { ChooseFileService } from './choose-file.service';
 import { DropletCanvasComponent } from './droplet-canvas.component';
@@ -28,8 +28,14 @@ interface Measurement {
     radialDistance: number,
 };
 
-const PLAY_TEXT = 'play_arrow';
-const PAUSE_TEXT = 'pause';
+@Component({
+  selector: 'measurements-table-dialog',
+  templateUrl: 'measurements-table.html',
+})
+export class MeasurementsTableDialog {
+  constructor(public dialogRef: MatDialogRef<MeasurementsTableDialog>) {}
+}
+
 
 @Component({
   selector: 'measure',
@@ -61,25 +67,24 @@ export class MeasureComponent {
       unit: 'um',
   };
   @Input() public timeSkipSeconds = 5;
-  @Input() public playPause = PLAY_TEXT;
 
   @ViewChild('dropletCanvas', {static: false}) public dropletCanvas: DropletCanvasComponent;
-  @ViewChild('video', {static: false}) public video: ElementRef;
-  @ViewChild('measurementsTable', {static: false}) public measurementsTable: MatTable<Measurement>;
+  // @ViewChild('measurementsTable', {static: false}) public measurementsTable: MatTable<Measurement>;
+  // @ViewChild('measurementsTableDialog', {static: false}) public measurementsTable: MatDialog;
 
-  constructor(private fileService: ChooseFileService) {}
+  constructor(private fileService: ChooseFileService, private dialog: MatDialog) {}
 
   public ngOnInit() {
       this.fileService.currentFile.subscribe(fileUrl => this.setFile(fileUrl));
   }
 
   public ngAfterViewInit() {
-      this.dropletCanvas.setBackground(this.video.nativeElement);
-      this.video.nativeElement.addEventListener('timeupdate', (function() {
-          this.dropletCanvas.update();
-      }).bind(this));
-      this.video.nativeElement.currentTime = 0.01;
-      this.video.nativeElement.crossOrigin = "Anonymous";
+      // this.dropletCanvas.setBackground(this.video.nativeElement);
+      // this.video.nativeElement.addEventListener('timeupdate', (function() {
+      //     this.dropletCanvas.update();
+      // }).bind(this));
+      // this.video.nativeElement.currentTime = 0.01;
+      // this.video.nativeElement.crossOrigin = "Anonymous";
   }
 
   public setAutoFindScale(event) {
@@ -91,21 +96,6 @@ export class MeasureComponent {
       this.fileUrl = fileUrl;
   }
 
-  public skipForward() {
-      this.video.nativeElement.currentTime += this.timeSkipSeconds;
-  }
-
-  public stepForward() {
-      this.video.nativeElement.currentTime += 0.01;
-  }
-
-  public skipBackward() {
-      this.video.nativeElement.currentTime -= this.timeSkipSeconds;
-  }
-
-  public stepBackward() {
-      this.video.nativeElement.currentTime -= 0.01;
-  }
   private commit() {
       const liveTime = this.dropletCanvas.liveTime;
       if (this.measurements.length === 0) {
@@ -138,7 +128,7 @@ export class MeasureComponent {
           contactAngle: data.contactAngle,
           radialDistance: data.radialDistance,
       })
-      this.measurementsTable.renderRows();
+      // this.measurementsTable.renderRows();
   }
 
   private measurementToColumns(m: Measurement): (string|number)[] {
@@ -280,17 +270,19 @@ export class MeasureComponent {
       return data;
 }
 
-  public commitAndNext() {
-      this.commit();
-      this.skipForward();
-  }
-
   private generateCsv() {
       let csvRows = this.measurements.map(m => this.measurementToColumns(m));
       csvRows.unshift(this.MEASUREMENT_HEADERS);
       const csvContent = 'data:text/csv;charset=utf-8,'
             + csvRows.map(e => e.join(',')).join('\n');
       return csvContent;
+  }
+
+  public viewResults() {
+      const dialogRef = this.dialog.open(MeasurementsTableDialog);
+      dialogRef.afterClosed().subscribe(result => {
+          console.log(`Dialog result: ${result}`);
+      });
   }
 
   public downloadCsv() {
@@ -305,15 +297,5 @@ export class MeasureComponent {
 
   private csvForFile(filePath): string {
       return filePath.split(/[\/\\]/).pop().split('.').shift() + '.csv';
-  }
-
-  public togglePlayPause() {
-      if (this.playPause === PLAY_TEXT) {
-          this.video.nativeElement.play();
-          this.playPause = PAUSE_TEXT;
-      } else {
-          this.video.nativeElement.pause();
-          this.playPause = PLAY_TEXT;
-      }
   }
 }
