@@ -1,8 +1,13 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef, MatTable } from '@angular/material';
+import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable } from '@angular/material';
 
 import { ChooseFileService } from './choose-file.service';
 import { DropletCanvasComponent } from './droplet-canvas.component';
+
+export interface DialogData {
+    displayedColumns: string[];
+    measurements: Measurement[];
+}
 
 interface Point {
     x: number,
@@ -33,7 +38,8 @@ interface Measurement {
   templateUrl: 'measurements-table.html',
 })
 export class MeasurementsTableDialog {
-  constructor(public dialogRef: MatDialogRef<MeasurementsTableDialog>) {}
+    constructor(public dialogRef: MatDialogRef<MeasurementsTableDialog>,
+                @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 }
 
 
@@ -58,8 +64,8 @@ export class MeasureComponent {
 
   public displayedColumns = [
       'id', 'timestamp', 'adjustedTimestamp', 'droplet1Radius', 'droplet1Volume',
-       'droplet2Radius', 'droplet2Volume', 'totalVolume', 'dibRadius', 'contactAngle',
-       'radialDistance',
+      'droplet2Radius', 'droplet2Volume', 'totalVolume', 'dibRadius', 'contactAngle',
+      'radialDistance',
   ];
 
   @Input() public scale = {
@@ -279,7 +285,12 @@ export class MeasureComponent {
   }
 
   public viewResults() {
-      const dialogRef = this.dialog.open(MeasurementsTableDialog);
+      const dialogRef = this.dialog.open(MeasurementsTableDialog, {
+          data: {
+              displayedColumns: this.displayedColumns,
+              measurements: this.measurements,
+          },
+      });
       dialogRef.afterClosed().subscribe(result => {
           console.log(`Dialog result: ${result}`);
       });
