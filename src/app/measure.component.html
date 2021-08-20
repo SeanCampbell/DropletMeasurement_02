@@ -4,7 +4,8 @@
         <mat-card fxLayout="row">
             <div fxLayout="column" fxLayoutGap="10px">
             <div fxLayout="row">
-                <droplet-canvas #dropletCanvas></droplet-canvas>
+                <droplet-canvas #dropletCanvas
+                                [background]="canvasCarousel.selectedImage()"></droplet-canvas>
             </div>
             </div>
         </mat-card>
@@ -33,7 +34,7 @@
                     <!-- <div> -->
                         <button mat-raised-button color="primary" (click)="viewResults()">VIEW RESULTS</button>
                         <button mat-raised-button color="primary" (click)="downloadCsv()">DOWNLOAD CSV</button>
-                        <button mat-raised-button color="primary" (click)="commit()">COMMIT</button>
+                        <!-- <button mat-raised-button color="primary" (click)="commit()">COMMIT</button> -->
                         <button mat-raised-button routerLink="/choose-file">CHOOSE FILE</button>
                     <!-- </div> -->
                 </mat-card>
@@ -41,9 +42,8 @@
         </div>
     </div>
     <div fxLayout="column" fxFlex="10%">
-        <mat-card>
-            Hello
-        </mat-card>
+        <droplet-canvas-carousel #canvasCarousel
+                                 (click)="selectImage()"></droplet-canvas-carousel>
     </div>
     </div>
 </div>

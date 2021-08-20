@@ -11,6 +11,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { ChooseFileComponent } from './choose-file.component';
 import { ChooseFileService } from './choose-file.service';
 import { DropletCanvasComponent } from './droplet-canvas.component';
+import { DropletCanvasCarouselComponent } from './droplet-canvas-carousel.component';
 import { MeasureComponent, MeasurementsTableDialog } from './measure.component';
 
 
@@ -19,6 +20,7 @@ import { MeasureComponent, MeasurementsTableDialog } from './measure.component';
     AppComponent,
     ChooseFileComponent,
     DropletCanvasComponent,
+    DropletCanvasCarouselComponent,
     MeasureComponent,
     MeasurementsTableDialog,
   ],

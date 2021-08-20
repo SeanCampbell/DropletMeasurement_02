@@ -1,8 +1,3 @@
-// TODO:
-// - Change background to support image instead of video.
-// - Add constructor that accepts handle positions.
-// - Allow disabling editing handles.
-
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import * as Tesseract from 'tesseract.js';
@@ -32,28 +27,34 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   private ctx: CanvasRenderingContext2D;
 
-  private handles: Array<{center: Handle, edge: Handle}>;
   private activeHandle: Handle;
 
-  private shouldAutoFindScale: boolean;
-  private shouldAutoFindDroplets: boolean = true;
+  private shouldAutoFindScale: boolean = false;
+  private shouldAutoFindDroplets: boolean = false;
+  private shouldAutoFindLiveTime: boolean = false;
   private scaleFactor: number = 2.5; //1;
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 
-  @Input() private width = 1920/this.scaleFactor;
-  @Input() private height = 1080/this.scaleFactor;
+  private imageWidth: number = 1920;
+  private imageHeight: number = 1920;
+  // private imageHeight: number = 1080;
+
+  @Input() public scale = {
+      value: 50,
+      unit: 'um',
+  };
+  @Input() private isEditable: boolean = true;
+  @Input() private width: number = this.imageWidth / 2.7;
+  @Input() private height: number = this.imageHeight / 2.7;
+  // @Input() private width: number = 1920/this.scaleFactor;
+  // @Input() private height: number = 1080/this.scaleFactor;
   // @Input() private width: number = 1952/this.scaleFactor;
   // @Input() private height: number = 1952/this.scaleFactor;
-  @Input() private background: HTMLVideoElement;
+  @Input() public background: HTMLImageElement;
+  public handles: Array<{center: Handle, edge: Handle}>;
 
-  constructor(private http: HttpClient) {
-
-  }
-
-  public setBackground(background: HTMLVideoElement) {
-    this.background = background;
-  }
+  constructor(private http: HttpClient) {}
 
   public update() {
     this.draw();
@@ -65,6 +66,39 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   public setAutoFindDroplets(autoFind: boolean) {
       this.shouldAutoFindDroplets = autoFind;
+  }
+
+  public setAutoFindLiveTime(autoFind: boolean) {
+      this.shouldAutoFindLiveTime = autoFind;
+  }
+
+  public setIsEditable(editable: boolean) {
+      this.isEditable = editable;
+  }
+
+  public setHandles(handles: Array<{center: Handle, edge: Handle}>) {
+      if (handles.length != 3) {
+          throw Error('Handles should have length 3.');
+      }
+      handles.forEach((handle, i) => {
+          this.handles[i]['center'].x = this.scaleToLocal(handle['center'].x);
+          this.handles[i]['center'].y = this.scaleToLocal(handle['center'].y);
+          this.handles[i]['edge'].x = this.scaleToLocal(handle['edge'].x);
+          this.handles[i]['edge'].y = this.scaleToLocal(handle['edge'].y);
+      });
+  }
+
+  public scaledHandles(): Array<{center: Handle, edge: Handle}> {
+      let handles: Array<{center: Handle, edge: Handle}> = [];
+      this.handles.forEach(handle => {
+          handles.push({
+              center: new Handle(
+                  this.scaleToGlobal(handle['center'].x), this.scaleToGlobal(handle['center'].y)),
+              edge: new Handle(
+                  this.scaleToGlobal(handle['edge'].x), this.scaleToGlobal(handle['edge'].y)),
+          });
+      });
+      return handles;
   }
 
   public ngAfterViewInit() {
@@ -79,18 +113,18 @@ export class DropletCanvasComponent implements AfterViewInit {
     this.ctx.strokeStyle = '#000';
 
     this.handles = [
-        {center: new Handle(this.width - 200, this.height - 50),
-         edge: new Handle(this.width - 100, this.height - 50)},
-        {center: new Handle(this.width / 2 - 200, this.height / 2),
-         edge: new Handle(this.width / 2 - 200, this.height / 2 - 100)},
-        {center: new Handle(this.width / 2 + 200, this.height / 2),
-         edge: new Handle(this.width / 2 + 200, this.height / 2 - 100)},
+        {center: new Handle(this.scaleToLocal(this.imageWidth - 500), this.scaleToLocal(this.imageHeight - 125)),
+         edge: new Handle(this.scaleToLocal(this.imageWidth - 250), this.scaleToLocal(this.imageHeight - 125))},
+        {center: new Handle(this.scaleToLocal(this.imageWidth / 2 - 500), this.scaleToLocal(this.imageHeight / 2)),
+         edge: new Handle(this.scaleToLocal(this.imageWidth / 2 - 500), this.scaleToLocal(this.imageHeight / 2 - 250))},
+        {center: new Handle(this.scaleToLocal(this.imageWidth / 2 + 500), this.scaleToLocal(this.imageHeight / 2)),
+         edge: new Handle(this.scaleToLocal(this.imageWidth / 2 + 500), this.scaleToLocal(this.imageHeight / 2 - 250))},
     ];
 
     this.activeHandle = null;
 
     this.captureEvents(canvasEl);
-    this.update();
+    setTimeout((function() { this.update(); }).bind(this), 500);
   }
 
   public getDropletData() {
@@ -128,6 +162,16 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   public getImage() {
       return;
+  }
+
+  private scaleToLocal(value: number): number {
+      const scaleFactor = this.imageWidth / this.width;
+      return value / scaleFactor;
+  }
+
+  private scaleToGlobal(value: number): number {
+      const scaleFactor = this.imageWidth / this.width;
+      return value * scaleFactor;
   }
 
   private readImage() {
@@ -197,20 +241,23 @@ export class DropletCanvasComponent implements AfterViewInit {
       let results = this.http.post(
           this.dropletDetectURL, {responseType: 'json', imageData: this.canvas.nativeElement.toDataURL()});
       results.subscribe((data: ItemData) => {
-          console.log('### moving handles', data.cx, data.cy, data.radii);
-          this.handles[1]['center'].x = data.cx[0] / this.scaleFactor;
-          this.handles[1]['center'].y = data.cy[0] / this.scaleFactor;
-          this.handles[1]['edge'].x = data.cx[0] / this.scaleFactor;
-          this.handles[1]['edge'].y = (data.cy[0] - data.radii[0]) / this.scaleFactor;
-          this.handles[2]['center'].x = data.cx[1] / this.scaleFactor;
-          this.handles[2]['center'].y = data.cy[1] / this.scaleFactor;
-          this.handles[2]['edge'].x = data.cx[1] / this.scaleFactor;
-          this.handles[2]['edge'].y = (data.cy[1] - data.radii[1]) / this.scaleFactor;
+          // console.log('### moving handles', data.cx, data.cy, data.radii);
+          this.handles[1]['center'].x = this.scaleToLocal(data.cx[0]);
+          this.handles[1]['center'].y = this.scaleToLocal(data.cy[0]);
+          this.handles[1]['edge'].x = this.scaleToLocal(data.cx[0]);
+          this.handles[1]['edge'].y = this.scaleToLocal(data.cy[0] - data.radii[0]);
+          this.handles[2]['center'].x = this.scaleToLocal(data.cx[1]);
+          this.handles[2]['center'].y = this.scaleToLocal(data.cy[1]);
+          this.handles[2]['edge'].x = this.scaleToLocal(data.cx[1]);
+          this.handles[2]['edge'].y = this.scaleToLocal(data.cy[1] - data.radii[1]);
       });
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
     // this will capture all mousedown events from the canvas element
+    if (!this.isEditable) {
+        return;
+    }
     fromEvent(canvasEl, 'mousedown')
       .pipe(
         switchMap((e: MouseEvent) => {
@@ -254,7 +301,9 @@ export class DropletCanvasComponent implements AfterViewInit {
       this.drawCircle(
           this.handles[2]['center'], this.handles[2]['edge']);
       this.ctx.restore();
-      this.drawHandles();
+      if (this.isEditable) {
+          this.drawHandles();
+      }
   }
 
   private drawLine(startPos: { x: number, y: number }, endPos: { x: number, y: number }) {
@@ -305,7 +354,9 @@ export class DropletCanvasComponent implements AfterViewInit {
           if (this.shouldAutoFindDroplets) {
               this.autoFindDroplets();
           }
-          this.readImage();
+          if (this.shouldAutoFindLiveTime) {
+              this.readImage();
+          }
       }
   }
 
@@ -329,9 +380,174 @@ export class DropletCanvasComponent implements AfterViewInit {
   private nextFrame() {
 
   }
+
+  public measurements() {
+      const liveTime = this.liveTime;
+      // if (this.measurements.length === 0) {
+      //     this.startTimeSeconds = liveTime;
+      // }
+
+      const scale = this.getScaleData();
+      const scaleLength = Math.abs(scale.end.x - scale.start.x);
+      const unitsPerPixel = this.scale.value / scaleLength;
+
+      const droplets = this.getDropletData();
+      const data = this.process(droplets, unitsPerPixel);
+
+      if (data === null) {
+          // TODO: Better error handling.
+          console.log('Error!');
+      }
+
+      return {
+          id: '1',
+          timestamp: liveTime,
+          // TODO: Fix to include context.
+          // adjustedTimestamp: liveTime - this.startTimeSeconds,
+          adjustedTimestamp: liveTime,
+          droplet1Radius: data.droplet1Radius,
+          droplet1Volume: data.droplet1Volume,
+          droplet2Radius: data.droplet2Radius,
+          droplet2Volume: data.droplet2Volume,
+          totalVolume: data.totalVolume,
+          dibRadius: data.dibRadius,
+          contactAngle: data.contactAngle,
+          radialDistance: data.radialDistance,
+      }
+  }
+
+  private dropletRadius(droplet: Droplet) {
+      return Math.sqrt(
+          (droplet.center.y - droplet.edge.y)**2
+          + (droplet.center.x - droplet.edge.x)**2);
+  }
+
+  private volumeFromRadius(radius: number): number {
+      return 4/3 * Math.PI * radius**3;
+  }
+
+  private dropletCenterDistance(droplet1, droplet2) {
+      return {
+          x: droplet1.center.x - droplet2.center.x,
+          y: droplet1.center.y - droplet2.center.y,
+      }
+  }
+
+  private process(droplets, unitsPerPixel) {
+      const data = {
+          droplet1Radius: 0,
+          droplet2Radius: 0,
+          droplet1Volume: 0,
+          droplet2Volume: 0,
+          totalVolume: 0,
+          dibRadius: null,
+          contactAngle: null,
+          radialDistance: null,
+      };
+
+      let twoDroplets = true;
+      let rDistance = Math.sqrt(
+          ((droplets[1].center.x - droplets[0].center.x) * unitsPerPixel)**2
+          + ((droplets[1].center.y - droplets[0].center.y) * unitsPerPixel)**2);
+
+      data.droplet1Radius = this.dropletRadius(droplets[0]) * unitsPerPixel;
+      data.droplet1Volume = this.volumeFromRadius(data.droplet1Radius);
+      data.droplet2Radius = this.dropletRadius(droplets[1]) * unitsPerPixel;
+      data.droplet2Volume = this.volumeFromRadius(data.droplet2Radius);
+
+      // Droplets not connected.
+      if (rDistance**2 >= (data.droplet1Radius + data.droplet2Radius)**2) {
+          data.totalVolume = data.droplet1Volume + data.droplet2Volume;
+          return data;
+      }
+
+      // TODO: What happens if one droplet's center is within the other droplet?
+      if (rDistance**2 <= (data.droplet1Radius - data.droplet2Radius)**2) {
+          twoDroplets = false;
+      }
+
+      let small = data.droplet1Radius;
+      let big = data.droplet2Radius;
+      if (small > big) {
+          small = data.droplet2Radius;
+          big = data.droplet1Radius;
+      }
+
+      // Circle-circle intersection.
+      if (twoDroplets) {
+          // lf is apparent distance, lr is distance after compensation for 3D.
+          const lf = rDistance;
+          const lr = Math.sqrt((big - small)**2 + rDistance**2)
+          data.radialDistance = lr;
+
+          // The following is from that droplet shape paper.
+          const thetaB = Math.acos((lr**2 - (small**2 + big**2)) / (2 * small * big));
+          data.dibRadius = (small * big * Math.sin(thetaB)) / lr;
+          const thetaDegrees = (180 * thetaB / Math.PI) / 2;
+          data.contactAngle = thetaDegrees;
+          // Dr. Lee wants half of the contact angle.
+          //System.out.println("New Method: " + dibRadius + ", " + Float.toString(180.0f * thetab / (float) Math.PI));
+
+          // This is circle-circle intersection viewing from above.
+          // This will cause the line denoting the circle-circle intersection to appear wrong.
+          const a = (data.droplet1Radius**2 - data.droplet2Radius**2 + lr**2) / (2.0 * lr);
+          const hi = Math.sqrt(data.droplet1Radius**2 - a**2);
+          const b = lr - a;
+          const c1h = data.droplet1Radius - a;
+          const c2h = data.droplet2Radius - b;
+
+          const dropletDistance = this.dropletCenterDistance(droplets[1], droplets[0]);
+
+          const hx = dropletDistance.x * (a / lr) + droplets[0].center.x;
+          const hy = dropletDistance.y * (a / lr) + droplets[0].center.y;
+
+          const i1x = hx + (hi * dropletDistance.y / lr);
+          const i1y = hy - (hi * dropletDistance.x / lr);
+          const i2x = hx - (hi * dropletDistance.y / lr);
+          const i2y = hy + (hi * dropletDistance.x / lr);
+          const iDistance = Math.sqrt((i2y - i1y)**2 + (i2x - i1x)**2);
+          const ia1 = Math.abs(Math.acos(a / data.droplet1Radius));
+          const ia2 = Math.abs(Math.acos(b / data.droplet2Radius));
+          // Source: http://stackoverflow.com/questions/3349125/circle-circle-intersection-points
+
+          let growingVolume = this.volumeFromRadius(data.droplet1Radius);
+          growingVolume -= (Math.PI * c1h * (3 * data.dibRadius**2 + c1h**2)) / 6;
+          data.droplet1Volume = growingVolume;
+
+          let shrinkingVolume = this.volumeFromRadius(data.droplet2Radius);
+          shrinkingVolume -= (Math.PI * c2h * (3 * data.dibRadius**2 * c2h**2)) / 6;
+          data.droplet2Volume = shrinkingVolume;
+
+          // pi * h * (3 * dibR^2 + h^2) / 6
+          let v = this.volumeFromRadius(big) + this.volumeFromRadius(small);
+          // Subtract DIB overlap.
+          v -= (Math.PI * c1h * (3 * data.dibRadius**2 + c1h**2)) / 6;
+          v -= (Math.PI * c2h * (3 * data.dibRadius**2 + c2h**2)) / 6;
+          data.totalVolume = v;
+      } else {
+          // Circle-surface intersection.
+          if (data.droplet1Radius == data.droplet2Radius) {
+              return null;
+          }
+
+          // Average center, contact angle requires concentric circles.
+          const cX = (droplets[0].center.x + droplets[1].center.x) / 2;
+          const cY = (droplets[0].center.y + droplets[1].center.y) / 2;
+          const y = Math.sqrt(big**2 - small**2);
+          const yp = -1 * (small / y);
+          const theta = Math.abs(Math.atan(yp));
+          data.contactAngle = 180 * theta / Math.PI
+
+          // Dome and volume calculations.
+          const hDome = big - y;
+          const vDome = (Math.PI * hDome * (3 * small**2 + hDome**2)) / 6;
+          data.totalVolume = this.volumeFromRadius(big) - vDome;
+      }
+      return data;
+  }
 }
 
-class Handle {
+export class Handle {
     Shape = {
         Square: 0,
         Circle: 1,
