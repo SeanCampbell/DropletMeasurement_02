@@ -117,6 +117,10 @@ export class MeasureComponent {
       this.fileUrl = fileUrl;
   }
 
+  private commit() {
+      this.canvasCarousel.updateSelectedCanvas(this.dropletCanvas.scaledHandles());
+  }
+
 //   private commit() {
 //       const liveTime = this.dropletCanvas.liveTime;
 //       if (this.measurements.length === 0) {
