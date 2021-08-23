@@ -10,6 +10,12 @@ interface ItemData {
     items: { name: string }[],
 };
 
+const readBucketName = 'droplet-measurement-processed-public';
+const writeBucketName = 'droplet-measurement-public';
+const readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + readBucketName + '/o';
+export const readGcsUrlPrefix = 'https://' + readBucketName + '.storage.googleapis.com/';
+export const writeGcsUrlPrefix = 'https://' + writeBucketName + '.storage.googleapis.com/';
+
 @Component({
   selector: 'choose-file',
   templateUrl: './choose-file.component.html',
@@ -17,11 +23,11 @@ interface ItemData {
 })
 export class ChooseFileComponent {
     private files = new Map();
-    private readBucketName = 'droplet-measurement-processed-public';
-    private writeBucketName = 'droplet-measurement-public';
-    private readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + this.readBucketName + '/o';
-    private readGcsUrlPrefix = 'https://' + this.readBucketName + '.storage.googleapis.com/';
-    public writeGcsUrlPrefix = 'https://' + this.writeBucketName + '.storage.googleapis.com/';
+    // private readBucketName = 'droplet-measurement-processed-public';
+    // private writeBucketName = 'droplet-measurement-public';
+    // private readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + this.readBucketName + '/o';
+    // public readGcsUrlPrefix = 'https://' + this.readBucketName + '.storage.googleapis.com/';
+    // public writeGcsUrlPrefix = 'https://' + this.writeBucketName + '.storage.googleapis.com/';
 
     @ViewChild('fileSelection', {static: true}) private selectionList: MatSelectionList;
 
@@ -40,24 +46,32 @@ export class ChooseFileComponent {
         this.fileService.chooseFile(selectedFile);
     }
 
-    public basename(filePath): string {
-        return filePath.split(/[\/\\]/).pop();
-    }
-
     public fileNames(): string[] {
         return Array.from(this.files.keys());
     }
 
     public refreshFiles() {
         this.files = new Map();
-        this.getFiles().subscribe((data: ItemData) => {
-            data.items.forEach((item) => {
-                this.files.set(item.name, this.readGcsUrlPrefix + item.name); //item.selfLink);
+        this.getFiles()
+            .subscribe((data: ItemData) => {
+            data.items
+                .filter(item => item.name.endsWith('droplet_measurements.json'))
+                .forEach((item) => {
+                console.log('item', item);
+                this.files.set(this.dirname(item.name), readGcsUrlPrefix + item.name); //this.dirname(item.name)); //item.selfLink);
             });
         });
     }
 
     private getFiles() {
-        return this.http.get(this.readGcsUrl);
+        return this.http.get(readGcsUrl);
+    }
+
+    public basename(filePath): string {
+        return filePath.split(/[\/\\]/).pop();
+    }
+
+    private dirname(filePath): string {
+        return filePath.substring(0, filePath.lastIndexOf('/'));
     }
 }

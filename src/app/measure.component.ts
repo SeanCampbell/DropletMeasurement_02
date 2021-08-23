@@ -15,10 +15,10 @@ interface Point {
     y: number,
 };
 
-interface Droplet {
-    center: Point,
-    edge: Point,
-};
+// interface Droplet {
+//     center: Point,
+//     edge: Point,
+// };
 
 interface Measurement {
     id: string,
@@ -59,6 +59,9 @@ export class MeasureComponent {
   public measurements: Measurement[] = [];
   public fileUrl = '';
 
+  @Input() imageWidth: number = 1920;
+  @Input() imageHeight: number = 1920;
+
   private MEASUREMENT_HEADERS = [
       'ID', 'Time Stamp', 'Adjusted Time', 'Droplet 1 Radius',
       'Droplet 1 Volume', 'Droplet 2 Radius', 'Droplet 2 Volume',
@@ -84,16 +87,18 @@ export class MeasureComponent {
 
   constructor(private fileService: ChooseFileService, private dialog: MatDialog) {}
 
-  public ngOnInit() {
-      this.fileService.currentFile.subscribe(fileUrl => this.setFile(fileUrl));
-  }
+  public ngOnInit() {}
 
   public ngAfterViewInit() {
-      this.image = document.createElement('img');
-      this.image.src = 'assets/WP 1POPC to 2ASP pH3 19mOsm vs NaCl 208 mOsm in SQE/frame_001.jpeg';
+      this.fileService.currentFile.subscribe(fileUrl => this.setFile(fileUrl));
+      this.fileService.currentFile.subscribe(fileUrl => this.canvasCarousel.setDataFile(fileUrl));
+
+      // this.image = document.createElement('img');
+      // this.image.src = 'assets/WP 1POPC to 2ASP pH3 19mOsm vs NaCl 208 mOsm in SQE/frame_001.jpeg';
+
       // this.dropletCanvas.setBackground(this.image.nativeElement);
       // this.dropletCanvas.setBackground(this.image);
-      this.dropletCanvas.background = this.image;
+      // this.dropletCanvas.background = this.image;  // Uncomment this
       // this.dropletCanvas.setBackground(this.video.nativeElement);
       // this.video.nativeElement.addEventListener('timeupdate', (function() {
       //     this.dropletCanvas.update();
@@ -108,9 +113,11 @@ export class MeasureComponent {
   }
 
   private selectImage() {
-      console.log('selectedImage');
-      this.dropletCanvas.setHandles(this.canvasCarousel.selectedHandles());
-      this.dropletCanvas.update();
+      if (this.dropletCanvas) {
+          this.dropletCanvas.setHandles(this.canvasCarousel.selectedHandles());
+          this.dropletCanvas.liveTime = this.canvasCarousel.selectedLiveTime();
+          this.dropletCanvas.update();
+      }
   }
 
   private setFile(fileUrl: string) {
@@ -118,7 +125,8 @@ export class MeasureComponent {
   }
 
   private commit() {
-      this.canvasCarousel.updateSelectedCanvas(this.dropletCanvas.scaledHandles());
+      this.canvasCarousel.updateSelectedCanvasHandles(this.dropletCanvas.scaledHandles());
+      this.canvasCarousel.updateSelectedCanvasLiveTime(this.dropletCanvas.liveTime);
   }
 
 //   private commit() {

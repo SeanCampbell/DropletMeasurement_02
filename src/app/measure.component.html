@@ -5,6 +5,7 @@
             <div fxLayout="column" fxLayoutGap="10px">
             <div fxLayout="row">
                 <droplet-canvas #dropletCanvas
+                                [imageWidth]="imageWidth" [imageHeight]=[imageHeight]
                                 [background]="canvasCarousel.selectedImage()"></droplet-canvas>
             </div>
             </div>
@@ -43,6 +44,7 @@
     </div>
     <div fxLayout="column" fxFlex="10%">
         <droplet-canvas-carousel #canvasCarousel
+                                 [imageWidth]="imageWidth" [imageHeight]=[imageHeight]
                                  (click)="selectImage()"></droplet-canvas-carousel>
     </div>
     </div>

@@ -14,6 +14,12 @@ class ItemData {
 }
 
 
+interface Droplet {
+    center: Point,
+    edge: Point,
+};
+
+
 @Component({
   selector: 'droplet-canvas',
   template: '<canvas #canvas></canvas>',
@@ -36,8 +42,8 @@ export class DropletCanvasComponent implements AfterViewInit {
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 
-  private imageWidth: number = 1920;
-  private imageHeight: number = 1920;
+  @Input() private imageWidth: number = 1920;
+  @Input() private imageHeight: number = 1920;
   // private imageHeight: number = 1080;
 
   @Input() public scale = {
@@ -345,7 +351,7 @@ export class DropletCanvasComponent implements AfterViewInit {
       if (!this.ctx) { return; }
 
       this.ctx.clearRect(0, 0, this.width, this.height);
-      if (this.background) {
+      if (this.background && this.background.complete) {
           this.ctx.drawImage(this.background, 0, 0, this.width, this.height);
 
           if (this.shouldAutoFindScale) {
