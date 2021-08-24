@@ -112,7 +112,7 @@ export class MeasureComponent {
       this.dropletCanvas.update();
   }
 
-  private selectImage() {
+  public selectImage() {
       if (this.dropletCanvas) {
           this.dropletCanvas.setHandles(this.canvasCarousel.selectedHandles());
           this.dropletCanvas.liveTime = this.canvasCarousel.selectedLiveTime();
@@ -124,7 +124,7 @@ export class MeasureComponent {
       this.fileUrl = fileUrl;
   }
 
-  private commit() {
+  public commit() {
       this.canvasCarousel.updateSelectedCanvasHandles(this.dropletCanvas.scaledHandles());
       this.canvasCarousel.updateSelectedCanvasLiveTime(this.dropletCanvas.liveTime);
   }
@@ -301,6 +301,10 @@ export class MeasureComponent {
 //       }
 //       return data;
 // }
+
+  public zoom(scaleFactor: number) {
+      this.dropletCanvas.setScaleFactor(scaleFactor);
+  }
 
   private generateCsv() {
       let csvRows = this.canvasCarousel.measurements().map(m => this.measurementToColumns(m));

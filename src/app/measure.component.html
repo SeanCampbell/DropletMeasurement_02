@@ -13,6 +13,13 @@
         <div fxLayou="row">
             <div fxLayout="column" fxFlex="70%">
                 <mat-card fxLayout="row" fxLayoutGap="20px">
+                    <button mat-raised-button color="primary" (click)="zoom(1.20)">120%</button>
+                    <button mat-raised-button color="primary" (click)="zoom(1.00)">100%</button>
+                    <button mat-raised-button color="primary" (click)="zoom(0.75)">75%</button>
+                    <button mat-raised-button color="primary" (click)="zoom(0.50)">50%</button>
+                    <button mat-raised-button color="primary" (click)="zoom(0.25)">25%</button>
+                </mat-card>
+                <mat-card fxLayout="row" fxLayoutGap="20px">
                     <label>Live time:</label>
                     <mat-form-field fxFlex="25%">
                         <input matInput type="number" [(ngModel)]="dropletCanvas.liveTime" name="liveTime">

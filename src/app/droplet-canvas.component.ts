@@ -7,10 +7,14 @@ import { switchMap, takeUntil, pairwise } from 'rxjs/operators'
 type Point = {'x': number, 'y': number};
 
 
-class ItemData {
+export class ItemData {
     public cx: number[];
     public cy: number[];
     public radii: number[];
+    public scale_x: number[];
+    public scale_y: number[];
+    public live_time: number;
+    public file_name: string;
 }
 
 
@@ -22,8 +26,8 @@ interface Droplet {
 
 @Component({
   selector: 'droplet-canvas',
-  template: '<canvas #canvas></canvas>',
-  styles: ['canvas { border: 1px solid #000; }']
+  template: '<div><canvas #canvas></canvas></div>',
+  styleUrls: ['./droplet-canvas.component.css']
 })
 export class DropletCanvasComponent implements AfterViewInit {
 
@@ -38,7 +42,7 @@ export class DropletCanvasComponent implements AfterViewInit {
   private shouldAutoFindScale: boolean = false;
   private shouldAutoFindDroplets: boolean = false;
   private shouldAutoFindLiveTime: boolean = false;
-  private scaleFactor: number = 2.5; //1;
+  private scaleFactor: number = 2.7;
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 
@@ -51,8 +55,8 @@ export class DropletCanvasComponent implements AfterViewInit {
       unit: 'um',
   };
   @Input() private isEditable: boolean = true;
-  @Input() private width: number = this.imageWidth / 2.7;
-  @Input() private height: number = this.imageHeight / 2.7;
+  @Input() private width: number = this.imageWidth / this.scaleFactor;
+  @Input() private height: number = this.imageHeight / this.scaleFactor;
   // @Input() private width: number = 1920/this.scaleFactor;
   // @Input() private height: number = 1080/this.scaleFactor;
   // @Input() private width: number = 1952/this.scaleFactor;
@@ -170,14 +174,19 @@ export class DropletCanvasComponent implements AfterViewInit {
       return;
   }
 
+  public setScaleFactor(scaleFactor: number) {
+      this.scaleFactor = scaleFactor;
+      this.update();
+  }
+
   private scaleToLocal(value: number): number {
-      const scaleFactor = this.imageWidth / this.width;
-      return value / scaleFactor;
+      // const scaleFactor = this.imageWidth / this.width;
+      return value / this.scaleFactor;
   }
 
   private scaleToGlobal(value: number): number {
-      const scaleFactor = this.imageWidth / this.width;
-      return value * scaleFactor;
+      // const scaleFactor = this.imageWidth / this.width;
+      return value * this.scaleFactor;
   }
 
   private readImage() {

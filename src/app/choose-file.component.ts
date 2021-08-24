@@ -28,8 +28,12 @@ export class ChooseFileComponent {
     // private readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + this.readBucketName + '/o';
     // public readGcsUrlPrefix = 'https://' + this.readBucketName + '.storage.googleapis.com/';
     // public writeGcsUrlPrefix = 'https://' + this.writeBucketName + '.storage.googleapis.com/';
+    public writeGcsUrlPrefix = writeGcsUrlPrefix;
+
 
     @ViewChild('fileSelection', {static: true}) private selectionList: MatSelectionList;
+    @ViewChild('startTime', {static: true}) private startTime: HTMLInputElement;
+    @ViewChild('timeInterval', {static: true}) private timeInterval: HTMLInputElement;
 
     constructor(private http: HttpClient, private fileService: ChooseFileService) {
         this.refreshFiles();
@@ -62,6 +66,32 @@ export class ChooseFileComponent {
             });
         });
     }
+
+    public upload() {
+        // console.log('uploading!!!')
+        // this.http.post(writeGcsUrlPrefix);
+
+        return true;
+    // curl -X POST --data-binary @OBJECT_LOCATION \
+    //     -H "Authorization: Bearer OAUTH2_TOKEN" \
+    //     -H "Content-Type: OBJECT_CONTENT_TYPE" \
+    //     "https://storage.googleapis.com/upload/storage/v1/b/BUCKET_NAME/o?uploadType=media&name=OBJECT_NAME"
+    //     <form #fileForm [action]="writeGcsUrlPrefix" method="post" enctype="multipart/form-data">
+    //         <input type="text" name="key" [value]="basename(file.value)" />
+    //         <input #file name="file" type="file" />
+    //         <button mat-raised-button color="primary" type="submit" (click)="fileForm.submit()">UPLOAD</button><br />
+    //         <table>
+    //             <tr><td><label>Start time</label></td><td><input type="number" value="0" /> seconds</td>
+    //             <tr><td><label>Time interval</label></td><td><input type="number" value="5" /> seconds</td>
+    //         </table>
+    //     </form>
+    }
+    // curl -X POST \
+    //     -H "Content-Type: OBJECT_CONTENT_TYPE" \
+    //     "https://storage.googleapis.com/upload/storage/v1/b/droplet-measurement-public/o?uploadType=media&name=OBJECT_NAME"
+
+        // https://droplet-measurement-public.storage.googleapis.com/
+
 
     private getFiles() {
         return this.http.get(readGcsUrl);

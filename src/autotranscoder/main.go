@@ -85,7 +85,7 @@ func processVideo(inputURI string) error {
                                 SpriteWidthPixels: 1952,
                                 SpriteHeightPixels: 1952,
                                 StartTimeOffset: &duration.Duration{
-                                    Seconds: 180,
+                                    Seconds: 0,
                                 },
                                 ExtractionStrategy: &transcoderpb.SpriteSheet_Interval{
                                     Interval: &duration.Duration{
