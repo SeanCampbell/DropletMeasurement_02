@@ -26,7 +26,7 @@ interface Droplet {
 
 @Component({
   selector: 'droplet-canvas',
-  template: '<div><canvas #canvas></canvas></div>',
+  templateUrl: './droplet-canvas.component.html',
   styleUrls: ['./droplet-canvas.component.css']
 })
 export class DropletCanvasComponent implements AfterViewInit {
@@ -38,11 +38,7 @@ export class DropletCanvasComponent implements AfterViewInit {
   private ctx: CanvasRenderingContext2D;
 
   private activeHandle: Handle;
-
-  private shouldAutoFindScale: boolean = false;
-  private shouldAutoFindDroplets: boolean = false;
-  private shouldAutoFindLiveTime: boolean = false;
-  private scaleFactor: number = 2.7;
+  private scaleFactor: number = 0.3;
   private isReadingImage: boolean = false;
   private dropletDetectURL: string = 'http://localhost:8080';
 
@@ -55,8 +51,8 @@ export class DropletCanvasComponent implements AfterViewInit {
       unit: 'um',
   };
   @Input() private isEditable: boolean = true;
-  @Input() private width: number = this.imageWidth / this.scaleFactor;
-  @Input() private height: number = this.imageHeight / this.scaleFactor;
+  @Input() private width: number = this.imageWidth * this.scaleFactor;
+  @Input() private height: number = this.imageHeight * this.scaleFactor;
   // @Input() private width: number = 1920/this.scaleFactor;
   // @Input() private height: number = 1080/this.scaleFactor;
   // @Input() private width: number = 1952/this.scaleFactor;
@@ -68,18 +64,6 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   public update() {
     this.draw();
-  }
-
-  public setAutoFindScale(autoFind: boolean) {
-      this.shouldAutoFindScale = autoFind;
-  }
-
-  public setAutoFindDroplets(autoFind: boolean) {
-      this.shouldAutoFindDroplets = autoFind;
-  }
-
-  public setAutoFindLiveTime(autoFind: boolean) {
-      this.shouldAutoFindLiveTime = autoFind;
   }
 
   public setIsEditable(editable: boolean) {
@@ -114,10 +98,6 @@ export class DropletCanvasComponent implements AfterViewInit {
   public ngAfterViewInit() {
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
     this.ctx = canvasEl.getContext('2d');
-
-    canvasEl.width = this.width;
-    canvasEl.height = this.height;
-
     this.ctx.lineWidth = 2;
     this.ctx.lineCap = 'round';
     this.ctx.strokeStyle = '#000';
@@ -176,17 +156,21 @@ export class DropletCanvasComponent implements AfterViewInit {
 
   public setScaleFactor(scaleFactor: number) {
       this.scaleFactor = scaleFactor;
-      this.update();
+      this.width = this.imageWidth * this.scaleFactor;
+      this.height = this.imageHeight * this.scaleFactor;
+      setTimeout((function() { this.update(); }).bind(this), 10);
   }
 
   private scaleToLocal(value: number): number {
+      // this.scaleFactor = this.imageWidth / this.width;
       // const scaleFactor = this.imageWidth / this.width;
-      return value / this.scaleFactor;
+      return value * this.scaleFactor;
   }
 
   private scaleToGlobal(value: number): number {
+      // this.scaleFactor = this.imageWidth / this.width;
       // const scaleFactor = this.imageWidth / this.width;
-      return value * this.scaleFactor;
+      return value / this.scaleFactor;
   }
 
   private captureEvents(canvasEl: HTMLCanvasElement) {
@@ -283,16 +267,6 @@ export class DropletCanvasComponent implements AfterViewInit {
       this.ctx.clearRect(0, 0, this.width, this.height);
       if (this.background && this.background.complete) {
           this.ctx.drawImage(this.background, 0, 0, this.width, this.height);
-
-          if (this.shouldAutoFindScale) {
-              this.autoFindScale();
-          }
-          if (this.shouldAutoFindDroplets) {
-              this.autoFindDroplets();
-          }
-          if (this.shouldAutoFindLiveTime) {
-              this.readImage();
-          }
       }
   }
 

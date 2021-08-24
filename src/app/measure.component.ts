@@ -77,8 +77,6 @@ export class MeasureComponent {
 
   @ViewChild('dropletCanvas', {static: false}) public dropletCanvas: DropletCanvasComponent;
   @ViewChild('canvasCarousel', {static: false}) public canvasCarousel: DropletCanvasCarouselComponent;
-  // @ViewChild('measurementsTable', {static: false}) public measurementsTable: MatTable<Measurement>;
-  // @ViewChild('measurementsTableDialog', {static: false}) public measurementsTable: MatDialog;
 
   constructor(private fileService: ChooseFileService, private dialog: MatDialog) {}
 
@@ -100,11 +98,6 @@ export class MeasureComponent {
       // }).bind(this));
       // this.video.nativeElement.currentTime = 0.01;
       // this.video.nativeElement.crossOrigin = "Anonymous";
-  }
-
-  public setAutoFindScale(event) {
-      this.dropletCanvas.setAutoFindScale(event.checked);
-      this.dropletCanvas.update();
   }
 
   public selectImage() {
