@@ -37,7 +37,7 @@ gsutil cors set cors-json-file.json gs://droplet-measurement-public-processed
 
 gcloud config set project droplet-measurement-309203
 
-export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/droplet-measurement/src/video-processor/autotranscoder/droplet-measurement-309203-5841dc66a9a8.json
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/droplet-measurement/src/video-processor/autotranscoder/droplet-measurement-309203-86f71a97b698.json
 
 gcloud auth application-default print-access-token
 
