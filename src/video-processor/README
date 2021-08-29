@@ -2,10 +2,9 @@ gcloud workflows deploy video-processor --source=workflow.yaml
 
 gcloud workflows run video-processor
 
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/droplet-measurement/src/video-processor/droplet-measurement-309203-364780eeb07f.json
 
 curl -i -X POST https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-309203/locations/us-central1/workflows/video-processor/executions \
     -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
     -H "Content-Type: application/json" \
-    -d '{"argument":"{\"sourceBucket\":\"droplet-measurement-public\",\"sourceVideoPath\":\"wp 25c sopc 178 SQE002.mp4\",\"targetWidth\":500,\"targetHeight\":500,\"startTimeOffsetSeconds\":10,\"intervalSeconds\":60}"}'
-
-export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/droplet-measurement/src/video-processor/droplet-measurement-309203-364780eeb07f.json
+    -d '{"argument":"{\"sourceBucket\":\"droplet-measurement-public\",\"sourceVideoPath\":\"wp 25c sopc 178 SQE002.mp4\",\"targetWidth\":1952,\"targetHeight\":1952,\"startTimeOffsetSeconds\":10,\"intervalSeconds\":60}"}'

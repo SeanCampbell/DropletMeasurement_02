@@ -14,6 +14,10 @@ gcloud run deploy droplet-detector --image gcr.io/droplet-measurement-309203/dro
 
 curl -i -X POST localhost:8080 \
     -H "Content-Type: application/json" \
+    -d '{"bucket": "droplet-measurement-processed-public", "dir_path": "processed/wp 25c sopc 178 SQE002/"}'
+
+curl -i -X POST localhost:8080 \
+    -H "Content-Type: application/json" \
     -d '{"bucket": "droplet-measurement-processed-public", "dir_path": "processed/WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE/"}'
 
 

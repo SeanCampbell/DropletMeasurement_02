@@ -1,8 +1,14 @@
+import logging
 import matplotlib.pyplot as plt
 import numpy as np
 import PIL
 import pytesseract
 import skimage.feature
+import sys
+
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+logger = logging.getLogger()
 
 
 def edges_image(img, sigma=25, low_threshold=0.9, high_threshold=0.95):
@@ -87,7 +93,7 @@ def find_circles_in_image(img):
     # final_image = resized_edges
     final_image = img
     if len(final_image.shape) == 2:
-      final_image = np.expand_dims(final_image, axis=-1) * np.ones([len(final_image), len(final_image[0]), 3])
+        final_image = np.expand_dims(final_image, axis=-1) * np.ones([len(final_image), len(final_image[0]), 3])
     adjusted_cx = cx - (padded_width - len(img[0])) // 2
     adjusted_cy = cy - (padded_height - len(img)) // 2
     draw_circles(final_image, adjusted_cy, adjusted_cx, radii)
@@ -113,32 +119,35 @@ def find_scale_in_image(img):
     x0, y0, x1, y1 = 0, 0, 0, 0
     found = False
     for i in range(img.shape[1]-1, int(img.shape[1]/2), -1):
-      for j in range(img.shape[0]-1, int(img.shape[0]/2), -1):
-        if (img[j, i] > threshold).all():
-            found = True
-            x0, y0 = i, j
-            m = img[j, i]
-            while (img[j, i] > threshold).all():
-                i -= 1
-            # We went one over.
-            i += 1
-            x1, y1 = i, j
+        for j in range(img.shape[0]-1, int(img.shape[0]/2), -1):
+            if (img[j, i] > threshold).all():
+                found = True
+                x0, y0 = i, j
+                m = img[j, i]
+                while (img[j, i] > threshold).all():
+                    i -= 1
+                # We went one over.
+                i += 1
+                x1, y1 = i, j
+                break
+        if found:
             break
-      if found:
-        break
     return [x0, x1], [y0, y1]
 
 
 # TODO: Get this working locally
 def find_live_time_in_image(img):
-    # img = PIL.Image.fromarray(np.uint8(img)*255)
-    # image_text = pytesseract.image_to_string(img)
-    # lines = [v.split(':', 1) for v in image_text.split('\n')]
-    # live_time = dict([(v[0], v[1].strip()) for v in lines if len(v) == 2])['Live Time']
-    # live_time_segments = live_time.split('.')[0].split(':')
-    # live_time_seconds = (
-    #     int(live_time_segments[0]) * 3600 +
-    #     int(live_time_segments[1]) * 60 +
-    #     int(live_time_segments[2]))
-    # return live_time_seconds
-    return 0
+    img = PIL.Image.fromarray(np.uint8(img)*255)
+    try:
+        image_text = pytesseract.image_to_string(img)
+    except pytesseract.TesseractNotFoundError as e:
+        logger.error('Tesseract not found, returning 0 instead: %s', e)
+        return 0
+    lines = [v.split(':', 1) for v in image_text.split('\n')]
+    live_time = dict([(v[0], v[1].strip()) for v in lines if len(v) == 2])['Live Time']
+    live_time_segments = live_time.split('.')[0].split(':')
+    live_time_seconds = (
+        int(live_time_segments[0]) * 3600 +
+        int(live_time_segments[1]) * 60 +
+        int(live_time_segments[2]))
+    return live_time_seconds

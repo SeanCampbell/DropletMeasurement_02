@@ -14,7 +14,7 @@ import subprocess
 import sys
 
 import image
-
+import numpy as np
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger()
@@ -43,6 +43,7 @@ def process_images_from_cloud_bucket(bucket_name, img_dir):
         img = plt.imread(io.BytesIO(blob.download_as_bytes()), format='jpeg')
         img = img.copy()
         img = img[:, :, :3]
+        logger.info('Image shape: %s', img.shape)
         cx, cy, radii = image.find_circles_in_image(img);
         live_time = image.find_live_time_in_image(img)
         scale_x, scale_y = image.find_scale_in_image(img)
@@ -87,6 +88,7 @@ def process_local_images(img_dir):
         img = img.copy()
         img = img[:, :, :3]
         cx, cy, radii = image.find_circles_in_image(img);
+        live_time = 0
         live_time = image.find_live_time_in_image(img)
         scale_x, scale_y = image.find_scale_in_image(img)
         data = {
