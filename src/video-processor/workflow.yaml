@@ -19,8 +19,16 @@ main:
         call: waitForJobCompletion
         args:
             jobName: ${autotranscoderResult.body.JobName}
+    - dropletDetector:
+        call: http.post
+        args:
+            url: https://droplet-detector-rmwldd2aha-wl.a.run.app
+            body:
+                bucket: autotranscoderResult.body.TargetBucket
+                dir_path: autotranscoderResult.body.TargetDirPath
+        result: dropletDetectorResult
     - return_result:
-        return: ${autotranscoderResult}
+        return: ${dropletDetectorResult}
 
 # See https://cloud.google.com/workflows/docs/sleeping
 waitForJobCompletion:

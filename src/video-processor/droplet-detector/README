@@ -14,7 +14,7 @@ gcloud run deploy droplet-detector --image gcr.io/droplet-measurement-309203/dro
 
 curl -i -X POST localhost:8080 \
     -H "Content-Type: application/json" \
-    -d '{"bucket_name": "droplet-measurement-processed-public", "dir_path": "processed/WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE/"}'
+    -d '{"bucket": "droplet-measurement-processed-public", "dir_path": "processed/WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE/"}'
 
 ## Cleaning up local docker images
 
@@ -30,7 +30,7 @@ gsutil cors set cors-json-file.json gs://droplet-measurement-public-processed
 
 gcloud config set project droplet-measurement-309203
 
-export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/video-processor/droplet-measurement/src/droplet-detector/droplet-measurement-309203-bb935e6a8a65.json
+export GOOGLE_APPLICATION_CREDENTIALS=/Users/Sean/Documents/Programs/Projects/DropletMeasurement_v002/droplet-measurement/src/video-processor/droplet-detector/droplet-measurement-309203-bb935e6a8a65.json
 gcloud auth application-default print-access-token
 
 
