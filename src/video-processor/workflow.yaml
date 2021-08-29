@@ -7,12 +7,12 @@ main:
         args:
             url: https://autotranscoder-rmwldd2aha-wl.a.run.app
             body:
-                sourceBucket: args.sourceBucket
-                sourceVideoPath: args.sourceVideoPath
-                targetWidth: args.targetWidth
-                targetHeight: args.targetHeight
-                startTimeOffsetSeconds: args.startTimeOffsetSeconds
-                intervalSeconds: args.intervalSeconds
+                sourceBucket: ${args.sourceBucket}
+                sourceVideoPath: ${args.sourceVideoPath}
+                targetWidth: ${args.targetWidth}
+                targetHeight: ${args.targetHeight}
+                startTimeOffsetSeconds: ${args.startTimeOffsetSeconds}
+                intervalSeconds: ${args.intervalSeconds}
         result: autotranscoderResult
     - waitForTranscodingComplete:
         call: waitForJobCompletion
