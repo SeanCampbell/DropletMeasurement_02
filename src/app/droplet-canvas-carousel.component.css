@@ -1,0 +1,13 @@
+div {
+    overflow: scroll;
+    height: 100vh;
+    position: fixed;
+}
+
+droplet-canvas {
+    display: block;
+}
+
+.selected {
+    border: 2px solid red;
+}

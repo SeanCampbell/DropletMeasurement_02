@@ -1,0 +1,61 @@
+<mat-dialog-content #measurementsTableDialog>
+    <mat-table #measurementsTable mat-table [dataSource]="data.measurements">
+         <ng-container matColumnDef="id">
+           <mat-header-cell *matHeaderCellDef> ID </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.id }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="timestamp">
+           <mat-header-cell *matHeaderCellDef> Timestamp </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.timestamp }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="adjustedTimestamp">
+           <mat-header-cell *matHeaderCellDef> Adjusted Timestamp </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.adjustedTimestamp }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="droplet1Radius">
+           <mat-header-cell *matHeaderCellDef> Droplet 1 Radius </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.droplet1Radius }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="droplet1Volume">
+           <mat-header-cell *matHeaderCellDef> Droplet 1 Volume </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.droplet1Volume }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="droplet2Radius">
+           <mat-header-cell *matHeaderCellDef> Droplet 2 Radius </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.droplet2Radius }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="droplet2Volume">
+           <mat-header-cell *matHeaderCellDef> Droplet 2 Volume </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.droplet2Volume }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="totalVolume">
+           <mat-header-cell *matHeaderCellDef> Total Volume </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.totalVolume }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="dibRadius">
+           <mat-header-cell *matHeaderCellDef> DIB Radius </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.dibRadius }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="contactAngle">
+           <mat-header-cell *matHeaderCellDef> Contact Angle </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.contactAngle }} </mat-cell>
+         </ng-container>
+
+         <ng-container matColumnDef="radialDistance">
+           <mat-header-cell *matHeaderCellDef> Radial Distance </mat-header-cell>
+           <mat-cell *matCellDef="let el"> {{ el.radialDistance }} </mat-cell>
+         </ng-container>
+
+         <mat-header-row *matHeaderRowDef="data.displayedColumns"></mat-header-row>
+         <mat-row *matRowDef="let row; columns: data.displayedColumns;"></mat-row>
+    </mat-table>
+</mat-dialog-content>

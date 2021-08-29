@@ -1,0 +1,9 @@
+<div>
+    <mat-card *ngFor="let image of images; let i = index"
+              (click)="setSelectedIndex(i)">
+        <droplet-canvas width="150" height="150"
+                        [class]="selectedIndex == i ? 'selected' : ''"
+                        [background]="image" [isEditable]="false">
+        </droplet-canvas>
+    </mat-card>
+</div>
