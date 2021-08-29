@@ -7,13 +7,12 @@ main:
         args:
             url: https://autotranscoder-rmwldd2aha-wl.a.run.app
             body:
-                # TODO: Replace with args.sourceBucket, etc.
-                sourceBucket: droplet-measurement-public
-                sourceVideoPath: "wp 25c sopc 178 SQE002.mp4"
-                targetWidth: 500
-                targetHeight: 500
-                startTimeOffsetSeconds: 10
-                intervalSeconds: 60
+                sourceBucket: args.sourceBucket
+                sourceVideoPath: args.sourceVideoPath
+                targetWidth: args.targetWidth
+                targetHeight: args.targetHeight
+                startTimeOffsetSeconds: args.startTimeOffsetSeconds
+                intervalSeconds: args.intervalSeconds
         result: autotranscoderResult
     - waitForTranscodingComplete:
         call: waitForJobCompletion
@@ -24,8 +23,8 @@ main:
         args:
             url: https://droplet-detector-rmwldd2aha-wl.a.run.app
             body:
-                bucket: autotranscoderResult.body.TargetBucket
-                dir_path: autotranscoderResult.body.TargetDirPath
+                bucket: ${autotranscoderResult.body.TargetBucket}
+                dir_path: ${autotranscoderResult.body.TargetDirPath}
         result: dropletDetectorResult
     - return_result:
         return: ${dropletDetectorResult}

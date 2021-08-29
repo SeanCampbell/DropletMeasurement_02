@@ -144,10 +144,12 @@ def handle_notification():
     if message.get('bucket'):
         logger.info('Processing images in bucket %s at path %s',
                     message['bucket'], message['dir_path'])
-        return process_images_from_cloud_bucket(message['bucket'], message['dir_path'])
-
-    logger.info('Processing local images in bucket at path %s', message['dir_path'])
-    return process_local_images(message['dir_path'])
+        process_images_from_cloud_bucket(message['bucket'], message['dir_path'])
+    else:
+        logger.info('Processing local images in bucket at path %s',
+                    message['dir_path'])
+        process_local_images(message['dir_path'])
+    return 'Success!'
 
 
 if __name__ == '__main__':

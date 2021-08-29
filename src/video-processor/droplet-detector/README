@@ -16,6 +16,7 @@ curl -i -X POST localhost:8080 \
     -H "Content-Type: application/json" \
     -d '{"bucket": "droplet-measurement-processed-public", "dir_path": "processed/WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE/"}'
 
+
 ## Cleaning up local docker images
 
 docker system prune
