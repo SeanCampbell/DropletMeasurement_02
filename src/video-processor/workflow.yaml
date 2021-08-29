@@ -1,47 +1,49 @@
-# https://cloud.google.com/workflows/docs/run/tutorial-cloud-run
-- autotranscoder:
-    call: http.post
-    args:
-        url: ""
-        body:
-            sourceBucket: droplet-measurement-public
-            sourceVideoPath: "WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE.003.mp4"
-            targetWidth: 10
-            targetHeight: 10
-            startTimeOffsetSeconds: 10
-            intervalSeconds: 60
-    result: autotranscoder_result
-- return_result:
-    return: ${autotranscoder_result}
+# See https://cloud.google.com/workflows/docs/run/tutorial-cloud-run
+main:
+    params: [args]
+    steps:
+    - autotranscoder:
+        call: http.post
+        args:
+            url: https://autotranscoder-rmwldd2aha-wl.a.run.app
+            body:
+                # TODO: Replace with args.sourceBucket, etc.
+                sourceBucket: droplet-measurement-public
+                sourceVideoPath: "WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE.003.mp4"
+                targetWidth: 10
+                targetHeight: 10
+                startTimeOffsetSeconds: 10
+                intervalSeconds: 60
+        result: autotranscoderResult
+    - waitForTranscodingComplete:
+        call: waitForJobCompletion
+        args:
+            jobName: ${autotranscoderResult.body.JobName}
+    - return_result:
+        return: ${autotranscoderResult}
 
-
-# - floor_function:
-#     call: http.post
-#     args:
-#         url: CLOUD_RUN_SERVICE_URL
-#         auth:
-#             type: OIDC
-#         body:
-#             input: ${log_result.body}
-#     result: floor_result
-
-# # https://cloud.google.com/workflows/docs/sleeping
-# waitForJobCompletion:
-#     params: [jobId]
-#     steps:
-#     - checkJob:
-#         call: http.get
-#         args:
-#             url: ${"https://example.com/jobs/" + jobId}
-#             auth:
-#                 type: OAuth2
-#         result: jobStatus
-#     - checkIfDone:
-#         switch:
-#           - condition: ${jobStatus.complete}
-#             return: jobStatus
-#     - wait:
-#         call: sys.sleep
-#         args:
-#             seconds: 60
-#         next: checkJob
+# See https://cloud.google.com/workflows/docs/sleeping
+waitForJobCompletion:
+    params: [jobName]
+    steps:
+    - wait1:
+        call: sys.sleep
+        args:
+            seconds: 10
+        next: checkJob
+    - checkJob:
+        call: http.get
+        args:
+            url: ${"https://transcoder.googleapis.com/v1beta1/" + jobName}
+            auth:
+                type: OAuth2
+        result: jobResponse
+    - checkIfDone:
+        switch:
+          - condition: ${jobResponse.body.state == "SUCCEEDED"}
+            return: jobResponse
+    - wait2:
+        call: sys.sleep
+        args:
+            seconds: 60
+        next: checkJob

@@ -135,6 +135,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
     outputURI := fmt.Sprintf("gs://%s/%s", targetBucket, targetDirPath)
     log.Printf("inputURI: %s || outputURI: %s || targetDirPath: %s", inputURI, outputURI, targetDirPath)
 
+    // jobName := ""
     jobName, err := processVideo(
         inputURI, outputURI, req.TargetWidth, req.TargetHeight,
         duration.Duration{Seconds: req.StartTimeOffsetSeconds},
@@ -155,6 +156,7 @@ func HandleRequest(w http.ResponseWriter, r *http.Request) {
         http.Error(w, fmt.Sprintf("Bad Request: %v", err), http.StatusBadRequest)
         return
     }
+    w.Header().Set("Content-Type", "application/json; charset=utf-8")
     fmt.Fprintf(w, string(jsonResp))
 }
 

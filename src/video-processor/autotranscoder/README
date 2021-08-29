@@ -7,7 +7,7 @@ docker tag autotranscoder gcr.io/droplet-measurement-309203/autotranscoder && \
 docker push gcr.io/droplet-measurement-309203/autotranscoder && \
 gcloud builds submit --tag gcr.io/droplet-measurement-309203/autotranscoder && \
 gcloud run deploy autotranscoder --image gcr.io/droplet-measurement-309203/autotranscoder \
-    --platform managed --max-instances 1 --concurrency 5
+    --platform managed --max-instances 1 --concurrency 5 --allow-unauthenticated
 
 
 ## Testing locally
