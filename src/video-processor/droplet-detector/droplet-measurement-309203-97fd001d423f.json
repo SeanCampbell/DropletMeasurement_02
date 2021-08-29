@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "droplet-measurement-309203",
+  "private_key_id": "97fd001d423f9a3a09626efe3a1d83c5e702970d",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDkS70GL+JHVbln\nAOrfQpFf7Qb71ktpb/aMOfMcT1/PLZEylWoPvra3sAnOgwAudgZmc0CW+/F8jylF\nR2qW7+W5O8zLXxVXBm1+Set8HTFGpzX72RRGfmcUisTgv/LvlOJ6P3ucsNFv5Rak\njj9sGu8LbeN1WPCukWuvdbzwA2oW9rtPAzSD/4wtc2Qts6QnPQpLwysQG7v5qhaB\nPr7HqnbnfWh0az+fdPHwuyNKHyUaLAMvUomFtzqWAruvpL6WRkZ0gZgT4IDlb4cO\n9CYsHQHyH570+LF+uTOwvOtbwxsdGVXRPtFK/t6GwkJxX/cVKXvfGcYVv9RmmlTL\nVDfdMJ2zAgMBAAECggEAGypyC0buZ6upPLsMt9VthBsp7hTBc4H5thT9O1ysm3Qi\nJ4FFFiuNBY2ilRrcjirINy+2u2CuizJj6FUHt39DeEfH5llhqjHfHJyCM4orv2sN\nTvM1aPAIpxaeN9pPd7fhPUfJl0spGOYLTDiLDnuj/1mrq96SAUvXoxDhEzRszt+C\nv7PY+Qj3jCC1cdwlyTsPeItzli7EFMN63ABFjw0ToH+a+/ivyt0nSc8ZUoPz4i+B\nb1nK9zFDy/3rNhcj256PGU51Kfeixck04rw8qELqAsEIjICmsVUgBbBmM2qOlOkN\nEA5cZJ9soZH9PsU2s03Mttis7CdIzcB/DDPyVRNlaQKBgQD0X3KygU5OsQWC6bHS\nU4rkqdNDyyvtQ07SEIQxWTS/JupnlBBI6HUfrEdYXJ2e0mh/iUU0jiyUH/3L9eCd\nFdabC6TA00l82Gkw6G1bKhMB6dWbmd4az3ks7VN+4IymARPnVtY9yfmz9W1FkVwV\n/h6cefo/ZklR6SAa3pCQ094EqQKBgQDvKHd0iflCcJY0j7xN1ZJyMpuEiceJZcPA\nR7lFL3okwFIF9kctSavcm+xP45mCAiAQxqAOs52GqOkCswI5eSKNXG+T5OUNwPc2\n0bbjSJCt/hyBU+AZ6Qw2y4n92DPhcGXxfIt00+4pqkbDb54RXHzUkuMqSJOtgi2h\npq3e6C0s+wKBgHaoOfsvCiTvk6uDadKkuhZZ17ldV9D3E7iwSF/l3tTKQptUq6ub\nI/PjJSlknyxVImR69N2WA1NRTVzR4OSli/Tw7Gisr0wtkLYsxZy0i1IshontZolC\nIKaN/jLnOaQJde6onZKXFeYpz4suD7amE5sLJ1XNhuB9ABfL5gpMtcsxAoGADm6/\nvr2w2CyZM/TUpVHVM6UQM5BpBUap6ImriZxS37LngEqbgwUmJPsX6L5QfkMIklqa\nQCjgwcahwTLyWGuSBTvl0+QFWq4hfSJsygyQBqAGMlvQc1/YB9qCqloIz3sL++XL\nOLKtdcA74wFyZZPSSLXQlbWpi9gGTvITHhee2k8CgYEA6kVRXLBCR3I1ZMIWQH/Z\n/bAEnLWAe/JmscHWKBOEzNJdV1dYQVc9b2VgloqbCSeOSoQvwMHdZ+Hn6eqKGJmc\nnpMuZAPqZYz74GCU8EXvnzE44flsDbztEAJVtCqhkx0vFDyJOtJl+T5qerCVwcVB\ntMQmeXiYeOOox9B41Ama7nQ=\n-----END PRIVATE KEY-----\n",
+  "client_email": "droplet-detector@droplet-measurement-309203.iam.gserviceaccount.com",
+  "client_id": "107027429657913997569",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/droplet-detector%40droplet-measurement-309203.iam.gserviceaccount.com"
+}

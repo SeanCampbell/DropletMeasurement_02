@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "droplet-measurement-309203",
+  "private_key_id": "5841dc66a9a815b49cc7e3dcaab74a0ded5a9085",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDDXFJxWfk9r9xG\n6eHuoyJ0z2m3JcSl2/RrrCCQjVL95d0e5khRnQBj5oWMtSO4T8NeYH31x3THuGbP\nna5DBgxm2W4wWY+toYDazJNd6K0DU9eo+Mg7TuTSSxydvH/yGPF2zA65hxDh7ICw\nHPW8HT5RBa+XuF4LcvEZ81vS4H6fz6hyr5i5um+PrCg4ji3NyGUtRcLoHLaGyQ0g\nLpYYyxqt2LJrYVOBPbniZrW+s5PRwbydDuTvy/hr4ADbitK6fJamt/+BCWGWc1Lz\nXXV9G6t/zMLqQgEcBh1xd7QMM8Wf7aD9P7+mnfGoMF9THpSg/C2WMx4mGoFWXS3B\n05owbY8xAgMBAAECggEAEM2vFarcgk7PDpZtZX5Ip21ztVodSPrbUiuS/Xv6aHZO\nB6tdCxALCYy5bfnioabSshpwmyRVyhv1U+RHKeKqTGplTOlXL2MV1zwDbO9nekLK\n6PDFIDzP97qYMoUVKDi3BDXXCmQwso4KH5vOEykcxBFOIimshSWU0VuaSVAf9BTc\n7RbkFeMEuz67N5OhzTi/lWwDK0AZI3Zba7SqxYm5Hpopu/jE3ttgOQYHZq6F9Imq\npimdwXSRHMsnGZUaIPwc+/riRzcic0U8ms592VuMbmQU46qYu40hUi6QLB5q2tcz\nA08DAUPuxf8RMaTM4ZxQimdz8cKC3qZu67kFdGM6RQKBgQDrrOZlZxNfvvjvZaY0\noprvLQ8tSjgIwqhxzvEoE0Dj80bsjCjzmHOjScwtL/lkUCMpI0RC6vro/ScztGrq\nz57T1nDtwtPRnkptvmIwWDTK9OkuX2nDeL3XiOIleL1NJRdTIwj/aLr4YA97g+ew\na2MS+J5x5GrazBvj+bw1hi7ImwKBgQDUNWCDQxIe1ds1/oK6Um+XyAI9i/FJSM4j\nyMQm8GZaIxmjFBrc0MEMFlgeWMdTpz1V8n2Rk1t1Afz5FJYh3K+fHR/dd3sEEz2n\nwnFFmupWk60SCId55VIiPoNgCnd4jxbjyYAUp3o/LW6hYazx0KIicIe2yHRyfO9V\nw412UAWGIwKBgFNabIZSxXRoq8yn6/fTxu5uxl5jUJwwlLjj00E0RhAZO+1vyRAW\nzFdlQ3R78j27ZiQnl/3+880xtArCdcoksm0D/B7reFU8IeDcpAerOsjJhCtljZeX\n/bTccfeE05cUVkKOMqF63h34g6FQzsIDyR+tlQR9IBnQdNDVw+4+Tg+fAoGAZPHL\nKkWSbhaew02BVC54pQPghPR337uBS6ZqIHfEyGXgASJEMPwgiKZsXmsuzk1EsQi7\n0K7/F2bNtpKjZBI9fHv3N3tpiiO49X9aMJkjlfGDp4tlHogGjQGdrubrs+6lHdAx\nXCHa1gi/kocLJLBxH97VwA4Uzo09sFdoiHpCVm8CgYAmaGpkddSwfTlr+6MwSMp0\nocoNjeKS89/6DNjm3DbgViqFRG7qpf40zxwcodL5BrUk2FwEmCKu2FiY9kOcm8UT\nCF886kAeXYGZKqO4lZmIxzTESFxeZr/hm+E3Breh1HhDv16W2HLeshoU1YTT8x08\nF2XmhiClQ7r/IzDXXYVIYA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "autotranscoder-job-reader@droplet-measurement-309203.iam.gserviceaccount.com",
+  "client_id": "111048124710780929204",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/autotranscoder-job-reader%40droplet-measurement-309203.iam.gserviceaccount.com"
+}
