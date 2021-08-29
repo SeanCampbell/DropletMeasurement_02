@@ -51,8 +51,8 @@ export class DropletCanvasComponent implements AfterViewInit {
       unit: 'um',
   };
   @Input() private isEditable: boolean = true;
-  @Input() private width: number = this.imageWidth * this.scaleFactor;
-  @Input() private height: number = this.imageHeight * this.scaleFactor;
+  @Input() public width: number = this.imageWidth * this.scaleFactor;
+  @Input() public height: number = this.imageHeight * this.scaleFactor;
   // @Input() private width: number = 1920/this.scaleFactor;
   // @Input() private height: number = 1080/this.scaleFactor;
   // @Input() private width: number = 1952/this.scaleFactor;
