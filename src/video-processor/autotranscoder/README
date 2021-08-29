@@ -17,8 +17,9 @@ https://cloud.google.com/run/docs/testing/local
 docker build -t autotranscoder . && \
 docker run
 
-curl -i -X POST localhost:8080 -d \
-    '{"sourceBucket": "droplet-measurement-public", "sourceVideoPath": "WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE.003.mp4", "targetWidth": 10, "targetHeight": 10, "startTimeOffsetSeconds": 10, "intervalSeconds": 60}'
+curl -i -X POST localhost:8080 \
+    -H "Content-Type: application/json" \
+    -d '{"sourceBucket": "droplet-measurement-public", "sourceVideoPath": "WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE.003.mp4", "targetWidth": 10, "targetHeight": 10, "startTimeOffsetSeconds": 10, "intervalSeconds": 60}'
 
 
 ## Cleaning up local docker images
