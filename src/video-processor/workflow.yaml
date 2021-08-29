@@ -9,9 +9,9 @@ main:
             body:
                 # TODO: Replace with args.sourceBucket, etc.
                 sourceBucket: droplet-measurement-public
-                sourceVideoPath: "WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE.003.mp4"
-                targetWidth: 10
-                targetHeight: 10
+                sourceVideoPath: "wp 25c sopc 178 SQE002.mp4"
+                targetWidth: 500
+                targetHeight: 500
                 startTimeOffsetSeconds: 10
                 intervalSeconds: 60
         result: autotranscoderResult
