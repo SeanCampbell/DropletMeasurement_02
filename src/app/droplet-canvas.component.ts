@@ -1,5 +1,5 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Component, Input, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, ViewChild, OnChanges } from '@angular/core';
 import * as Tesseract from 'tesseract.js';
 import { fromEvent } from 'rxjs';
 import { switchMap, takeUntil, pairwise } from 'rxjs/operators'
@@ -111,6 +111,13 @@ export class DropletCanvasComponent implements AfterViewInit {
          edge: new Handle(this.scaleToLocal(this.imageWidth / 2 + 500), this.scaleToLocal(this.imageHeight / 2 - 250))},
     ];
 
+    let handles = this.scaledHandles();
+    this.scaleFactor = this.width / this.imageWidth;
+    this.setHandles(handles);
+    setTimeout((function() {
+        this.update();
+    }).bind(this), 10);
+
     this.activeHandle = null;
 
     this.captureEvents(canvasEl);
@@ -155,10 +162,14 @@ export class DropletCanvasComponent implements AfterViewInit {
   }
 
   public setScaleFactor(scaleFactor: number) {
+      let handles = this.scaledHandles();
       this.scaleFactor = scaleFactor;
       this.width = this.imageWidth * this.scaleFactor;
       this.height = this.imageHeight * this.scaleFactor;
-      setTimeout((function() { this.update(); }).bind(this), 10);
+      this.setHandles(handles);
+      setTimeout((function() {
+          this.update();
+      }).bind(this), 10);
   }
 
   private scaleToLocal(value: number): number {

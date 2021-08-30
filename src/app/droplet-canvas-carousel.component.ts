@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { AfterViewInit, Component, ElementRef, OnChanges, Input, ViewChild, ViewChildren } from '@angular/core';
+import { Component, ElementRef, OnChanges, Input, ViewChild, ViewChildren } from '@angular/core';
 import { readGcsUrlPrefix } from './choose-file.component';
 import { DropletCanvasComponent, Handle, ItemData } from './droplet-canvas.component';
 
@@ -21,8 +21,8 @@ export class DropletCanvasCarouselComponent implements OnChanges {
     public selectedIndex: number = 0;
     private handles: Array<{center: Handle, edge: Handle}>;
 
-    @Input() private imageWidth: number = 1920;
-    @Input() private imageHeight: number = 1920;
+    @Input() private imageWidth: number = 1952;
+    @Input() private imageHeight: number = 1952;
 
     // @ViewChild('canvasContainer', {static: false}) private canvasContainer: ElementRef;
     @ViewChildren(DropletCanvasComponent) private thumbnailCanvases; //: QueryList<DropletCanvasComponent>;
@@ -80,8 +80,6 @@ export class DropletCanvasCarouselComponent implements OnChanges {
     }
 
     public setDataFile(file_path: string) {
-        // console.log('#### file_path', file_path);
-        // console.log('#### gcs bucket', readGcsUrlPrefix);
         if (file_path.startsWith(readGcsUrlPrefix)) {
 
         }
@@ -90,12 +88,12 @@ export class DropletCanvasCarouselComponent implements OnChanges {
         this.http.get(file_path).subscribe((data: ItemDataContainer) => {
             this.images = [];
             this.data = data.data;
-            console.log('data', data.data);
+            // console.log('data', data.data);
             data.data.forEach(v => {
-                console.log('v', v);
+                // console.log('v', v);
                 let image = document.createElement('img')
                 // image.src = base_dir + v['file_name'];
-                console.log('image src', readGcsUrlPrefix + v['file_name']);
+                // console.log('image src', readGcsUrlPrefix + v['file_name']);
                 image.src = readGcsUrlPrefix + v['file_name'];
                 this.images.push(image);
                 // console.log('images', this.images);

@@ -61,7 +61,7 @@ export class ChooseFileComponent {
             data.items
                 .filter(item => item.name.endsWith('droplet_measurements.json'))
                 .forEach((item) => {
-                console.log('item', item);
+                // console.log('item', item);
                 this.files.set(this.dirname(item.name), readGcsUrlPrefix + item.name); //this.dirname(item.name)); //item.selfLink);
             });
         });
