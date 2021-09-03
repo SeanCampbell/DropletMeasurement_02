@@ -1,10 +1,49 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSelectionList, MatListOption } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
 import { catchError } from 'rxjs/operators';
 
 import { ChooseFileService } from './choose-file.service';
+// import * as firebase from "firebase/app";
+// import 'firebase/storage';
+
+
+// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-storage.js";
+
+import { initializeApp } from "firebase/app";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+
+const storage = getStorage();
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBaQ4JDpRWBpcNdMpK1BmSSDed33hVnlqY",
+  authDomain: "droplet-measurement-a396a.firebaseapp.com",
+  databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
+  projectId: "droplet-measurement-a396a",
+  storageBucket: "droplet-measurement-a396a.appspot.com",
+  messagingSenderId: "283281649775",
+  appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
+  measurementId: "G-C43CYQP4V0"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+
+// const storage = firebase.storage();
+console.log('storage', storage);
+// Create the file metadata
+/** @type {any} */
+const metadata = {
+  contentType: 'image/jpeg'
+};
+
+
+
+
+
+
 
 
 interface ItemData {
@@ -33,7 +72,7 @@ export class ChooseFileComponent {
     public writeGcsUrlPrefix = writeGcsUrlPrefix;
 
 
-    @ViewChild('file', {static: true}) private fileInput: HTMLInputElement;
+    @ViewChild('file', {static: true}) private fileInput: ElementRef;
     @ViewChild('fileSelection', {static: true}) private selectionList: MatSelectionList;
     @ViewChild('startTime', {static: true}) private startTime: HTMLInputElement;
     @ViewChild('timeInterval', {static: true}) private timeInterval: HTMLInputElement;
@@ -71,6 +110,54 @@ export class ChooseFileComponent {
     }
 
     public upload() {
+        let file = this.fileInput.nativeElement.files[0];
+        console.log('fileInput', file);
+        const storageRef = ref(storage, file.name);
+        console.log('##### storage', storage);
+        console.log('##### storageRef', storageRef);
+        const uploadTask = uploadBytesResumable(storageRef, file); //, metadata);
+        //
+        // // // Listen for state changes, errors, and completion of the upload.
+        // uploadTask.on('state_changed',
+        //   (snapshot) => {
+        //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        //     console.log('Upload is ' + progress + '% done');
+        //     switch (snapshot.state) {
+        //       case 'paused':
+        //         console.log('Upload is paused');
+        //         break;
+        //       case 'running':
+        //         console.log('Upload is running');
+        //         break;
+        //     }
+        //   },
+        //   (error) => {
+        //     // A full list of error codes is available at
+        //     // https://firebase.google.com/docs/storage/web/handle-errors
+        //     switch (error.code) {
+        //       case 'storage/unauthorized':
+        //         // User doesn't have permission to access the object
+        //         break;
+        //       case 'storage/canceled':
+        //         // User canceled the upload
+        //         break;
+        //
+        //       // ...
+        //
+        //       case 'storage/unknown':
+        //         // Unknown error occurred, inspect error.serverResponse
+        //         break;
+        //     }
+        //   },
+        //   () => {
+        //     // Upload completed successfully, now we can get the download URL
+        //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        //       console.log('File available at', downloadURL);
+        //     });
+        //   }
+        // );
+
         // let data = new FormData();
         // const httpOptions = {
         //     headers: new HttpHeaders({
@@ -87,26 +174,26 @@ export class ChooseFileComponent {
         //     // )
         // return false;
 
-        const httpOptions = {
-            headers: new HttpHeaders({
-                'Content-Type':  'application/json',
-                // "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
-                // 'Access-Control-Allow-Origin': 'localhost:4200',
-                // 'Authorization': 'my-auth-token',
-            }),
-        };
-        let data = {
-            'argument': {
-                'sourceBucket': 'droplet-measurement-public',
-                'sourceVideoPath': 'wp 25c sopc 178 SQE002.mp4',
-                'targetWidth': 1952,
-                'targetHeight': 1952,
-                'startTimeOffsetSeconds': 10,
-                'intervalSeconds': 60,
-            },
-        };
-        this.http.post(executeWorkflowUrl, JSON.stringify(data), httpOptions)
-            .subscribe(response => {console.log(response)});
+        // const httpOptions = {
+        //     headers: new HttpHeaders({
+        //         'Content-Type':  'application/json',
+        //         // "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+        //         // 'Access-Control-Allow-Origin': 'localhost:4200',
+        //         // 'Authorization': 'my-auth-token',
+        //     }),
+        // };
+        // let data = {
+        //     'argument': {
+        //         'sourceBucket': 'droplet-measurement-public',
+        //         'sourceVideoPath': 'wp 25c sopc 178 SQE002.mp4',
+        //         'targetWidth': 1952,
+        //         'targetHeight': 1952,
+        //         'startTimeOffsetSeconds': 10,
+        //         'intervalSeconds': 60,
+        //     },
+        // };
+        // this.http.post(executeWorkflowUrl, JSON.stringify(data), httpOptions)
+        //     .subscribe(response => {console.log(response)});
 
         // const projectId = 'droplet-measurement-a396a';
         // const projectId = 'droplet-measurement-a396a';
@@ -123,6 +210,8 @@ export class ChooseFileComponent {
         // }
         // listWorkflows();
         // }
+        return false;
+    }
 
 
     private getFiles() {
