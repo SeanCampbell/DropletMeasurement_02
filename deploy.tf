@@ -1,4 +1,6 @@
 # Cloud Run - https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/cloud_run_service
+# Cloud Storage - https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/storage_bucket
+# Cloud Workflows - https://cloud.google.com/workflows/docs/quickstart-terraform
 
 terraform {
     required_providers {

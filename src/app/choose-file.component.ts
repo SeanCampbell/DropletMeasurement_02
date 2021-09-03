@@ -90,7 +90,6 @@ export class ChooseFileComponent {
         const httpOptions = {
             headers: new HttpHeaders({
                 'Content-Type':  'application/json',
-                // 'Authorization: AIzaSyAtkGeuRmrsdIG-WVtrpXkUNsA4Ls0urGE',
                 // "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
                 // 'Access-Control-Allow-Origin': 'localhost:4200',
                 // 'Authorization': 'my-auth-token',
