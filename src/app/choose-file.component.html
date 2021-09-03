@@ -1,9 +1,11 @@
 <mat-card>
     <h1>Upload new file</h1>
     <form #fileForm [action]="writeGcsUrlPrefix" method="post" enctype="multipart/form-data" (submit)="upload()">
+    <!-- <form #fileForm (ngSubmit)="upload()"> -->
         <input type="text" name="key" [value]="basename(file.value)" />
         <input #file name="file" type="file" />
-        <button mat-raised-button color="primary" type="submit" (click)="fileForm.submit()">UPLOAD</button><br />
+        <button mat-raised-button color="primary" type="submit">UPLOAD</button><br />
+        <!-- <button mat-raised-button color="primary" type="submit" (click)="fileForm.submit()">UPLOAD</button><br /> -->
         <table>
             <tr><td><label>Start time</label></td><td><input #startTime type="number" value="0" /> seconds</td>
             <tr><td><label>Time interval</label></td><td><input #timeInterval type="number" value="5" /> seconds</td>

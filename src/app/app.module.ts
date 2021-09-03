@@ -14,7 +14,6 @@ import { DropletCanvasComponent } from './droplet-canvas.component';
 import { DropletCanvasCarouselComponent } from './droplet-canvas-carousel.component';
 import { MeasureComponent, MeasurementsTableDialog } from './measure.component';
 
-
 @NgModule({
   declarations: [
     AppComponent,

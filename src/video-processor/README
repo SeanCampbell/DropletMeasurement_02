@@ -8,3 +8,13 @@ curl -i -X POST https://workflowexecutions.googleapis.com/v1beta/projects/drople
     -H "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
     -H "Content-Type: application/json" \
     -d '{"argument":"{\"sourceBucket\":\"droplet-measurement-public\",\"sourceVideoPath\":\"wp 25c sopc 178 SQE002.mp4\",\"targetWidth\":1952,\"targetHeight\":1952,\"startTimeOffsetSeconds\":10,\"intervalSeconds\":60}"}'
+
+curl -i -X POST https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-309203/locations/us-central1/workflows/video-processor/executions \
+    -H "Authorization: apiKey AIzaSyAtkGeuRmrsdIG-WVtrpXkUNsA4Ls0urGE" \
+    -H "Content-Type: application/json" \
+    -d '{"argument":"{\"sourceBucket\":\"droplet-measurement-public\",\"sourceVideoPath\":\"wp 25c sopc 178 SQE002.mp4\",\"targetWidth\":1952,\"targetHeight\":1952,\"startTimeOffsetSeconds\":10,\"intervalSeconds\":60}"}'
+
+
+curl -i -X POST https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-309203/locations/us-central1/workflows/video-processor/executions?key=AIzaSyAtkGeuRmrsdIG-WVtrpXkUNsA4Ls0urGE \
+    -H "Content-Type: application/json" \
+    -d '{"argument":"{\"sourceBucket\":\"droplet-measurement-public\",\"sourceVideoPath\":\"wp 25c sopc 178 SQE002.mp4\",\"targetWidth\":1952,\"targetHeight\":1952,\"startTimeOffsetSeconds\":10,\"intervalSeconds\":60}"}'

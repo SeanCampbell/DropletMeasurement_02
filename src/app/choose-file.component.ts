@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSelectionList, MatListOption } from '@angular/material';
 import { SelectionModel } from '@angular/cdk/collections';
+import { catchError } from 'rxjs/operators';
 
 import { ChooseFileService } from './choose-file.service';
 
@@ -10,6 +11,7 @@ interface ItemData {
     items: { name: string }[],
 };
 
+const executeWorkflowUrl = 'https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-309203/locations/us-central1/workflows/video-processor/executions';
 const readBucketName = 'droplet-measurement-processed-public';
 const writeBucketName = 'droplet-measurement-public';
 const readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + readBucketName + '/o';
@@ -31,6 +33,7 @@ export class ChooseFileComponent {
     public writeGcsUrlPrefix = writeGcsUrlPrefix;
 
 
+    @ViewChild('file', {static: true}) private fileInput: HTMLInputElement;
     @ViewChild('fileSelection', {static: true}) private selectionList: MatSelectionList;
     @ViewChild('startTime', {static: true}) private startTime: HTMLInputElement;
     @ViewChild('timeInterval', {static: true}) private timeInterval: HTMLInputElement;
@@ -68,29 +71,59 @@ export class ChooseFileComponent {
     }
 
     public upload() {
-        // console.log('uploading!!!')
-        // this.http.post(writeGcsUrlPrefix);
+        // let data = new FormData();
+        // const httpOptions = {
+        //     headers: new HttpHeaders({
+        //         'Content-Type':  'multipart/form-data',
+        //         // 'Access-Control-Allow-Origin': 'localhost:4200',
+        //         // Authorization: 'my-auth-token',
+        //     }),
+        // };
+        // console.log('data', data);
+        // this.http.post(writeGcsUrlPrefix, data, httpOptions)
+        // .subscribe(done => { console.log('done!', done);});
+        //     // .pipe(
+        //     //     catchError(err => {console.log('Error uploading data:', err);})
+        //     // )
+        // return false;
 
-        return true;
-    // curl -X POST --data-binary @OBJECT_LOCATION \
-    //     -H "Authorization: Bearer OAUTH2_TOKEN" \
-    //     -H "Content-Type: OBJECT_CONTENT_TYPE" \
-    //     "https://storage.googleapis.com/upload/storage/v1/b/BUCKET_NAME/o?uploadType=media&name=OBJECT_NAME"
-    //     <form #fileForm [action]="writeGcsUrlPrefix" method="post" enctype="multipart/form-data">
-    //         <input type="text" name="key" [value]="basename(file.value)" />
-    //         <input #file name="file" type="file" />
-    //         <button mat-raised-button color="primary" type="submit" (click)="fileForm.submit()">UPLOAD</button><br />
-    //         <table>
-    //             <tr><td><label>Start time</label></td><td><input type="number" value="0" /> seconds</td>
-    //             <tr><td><label>Time interval</label></td><td><input type="number" value="5" /> seconds</td>
-    //         </table>
-    //     </form>
-    }
-    // curl -X POST \
-    //     -H "Content-Type: OBJECT_CONTENT_TYPE" \
-    //     "https://storage.googleapis.com/upload/storage/v1/b/droplet-measurement-public/o?uploadType=media&name=OBJECT_NAME"
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type':  'application/json',
+                // 'Authorization: AIzaSyAtkGeuRmrsdIG-WVtrpXkUNsA4Ls0urGE',
+                // "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
+                // 'Access-Control-Allow-Origin': 'localhost:4200',
+                // 'Authorization': 'my-auth-token',
+            }),
+        };
+        let data = {
+            'argument': {
+                'sourceBucket': 'droplet-measurement-public',
+                'sourceVideoPath': 'wp 25c sopc 178 SQE002.mp4',
+                'targetWidth': 1952,
+                'targetHeight': 1952,
+                'startTimeOffsetSeconds': 10,
+                'intervalSeconds': 60,
+            },
+        };
+        this.http.post(executeWorkflowUrl, JSON.stringify(data), httpOptions)
+            .subscribe(response => {console.log(response)});
 
-        // https://droplet-measurement-public.storage.googleapis.com/
+        // const projectId = 'droplet-measurement-a396a';
+        // const projectId = 'droplet-measurement-a396a';
+        // const location = 'us-central1';
+        // const {WorkflowsClient} = require('@google-cloud/workflows');
+        // const client = new WorkflowsClient();
+        // async function listWorkflows() {
+        //   const [workflows] = await client.listWorkflows({
+        //     parent: client.locationPath(projectId, location),
+        //   });
+        //   for (const workflow of workflows) {
+        //     console.info(`name: ${workflow.name}`);
+        //   }
+        // }
+        // listWorkflows();
+        // }
 
 
     private getFiles() {
