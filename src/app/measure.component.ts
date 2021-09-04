@@ -1,9 +1,11 @@
 import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatTable } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatTable } from '@angular/material/table';
 
 import { ChooseFileService } from './choose-file.service';
 import { DropletCanvasComponent } from './droplet-canvas.component';
 import { DropletCanvasCarouselComponent } from './droplet-canvas-carousel.component';
+
 
 export interface DialogData {
     displayedColumns: string[];

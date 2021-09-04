@@ -9,8 +9,8 @@ const appRoutes: Routes = [
     { path: 'measure', component: MeasureComponent },
     { path: 'choose-file', component: ChooseFileComponent },
     { path: '**', redirectTo: '/measure', pathMatch: 'full' },
-    //{ path: '', redirectTo: '/measure', pathMatch: 'full' },
-    //{ path: '**', component: AppComponent },
+    // { path: '', redirectTo: '/measure', pathMatch: 'full' },
+    // { path: '**', component: AppComponent },
 ];
 
 @NgModule({

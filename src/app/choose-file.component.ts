@@ -1,6 +1,7 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { MatSelectionList, MatListOption } from '@angular/material';
+import { MatCard } from '@angular/material/card';
+import { MatSelectionList, MatListOption } from '@angular/material/list';
 import { SelectionModel } from '@angular/cdk/collections';
 import { catchError } from 'rxjs/operators';
 
@@ -11,33 +12,33 @@ import { ChooseFileService } from './choose-file.service';
 
 // import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-storage.js";
 
-import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+// import { initializeApp } from "firebase/app";
+// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 // import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
-const storage = getStorage();
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBaQ4JDpRWBpcNdMpK1BmSSDed33hVnlqY",
-  authDomain: "droplet-measurement-a396a.firebaseapp.com",
-  databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
-  projectId: "droplet-measurement-a396a",
-  storageBucket: "droplet-measurement-a396a.appspot.com",
-  messagingSenderId: "283281649775",
-  appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
-  measurementId: "G-C43CYQP4V0"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-
-// const storage = firebase.storage();
-console.log('storage', storage);
-// Create the file metadata
-/** @type {any} */
-const metadata = {
-  contentType: 'image/jpeg'
-};
+// const storage = getStorage();
+//
+// const firebaseConfig = {
+//   apiKey: "AIzaSyBaQ4JDpRWBpcNdMpK1BmSSDed33hVnlqY",
+//   authDomain: "droplet-measurement-a396a.firebaseapp.com",
+//   databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
+//   projectId: "droplet-measurement-a396a",
+//   storageBucket: "droplet-measurement-a396a.appspot.com",
+//   messagingSenderId: "283281649775",
+//   appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
+//   measurementId: "G-C43CYQP4V0"
+// };
+//
+// // Initialize Firebase
+// const app = initializeApp(firebaseConfig);
+//
+// // const storage = firebase.storage();
+// console.log('storage', storage);
+// // Create the file metadata
+// /** @type {any} */
+// const metadata = {
+//   contentType: 'image/jpeg'
+// };
 
 
 
@@ -112,10 +113,10 @@ export class ChooseFileComponent {
     public upload() {
         let file = this.fileInput.nativeElement.files[0];
         console.log('fileInput', file);
-        const storageRef = ref(storage, file.name);
-        console.log('##### storage', storage);
-        console.log('##### storageRef', storageRef);
-        const uploadTask = uploadBytesResumable(storageRef, file); //, metadata);
+        // const storageRef = ref(storage, file.name);
+        // console.log('##### storage', storage);
+        // console.log('##### storageRef', storageRef);
+        // const uploadTask = uploadBytesResumable(storageRef, file); //, metadata);
         //
         // // // Listen for state changes, errors, and completion of the upload.
         // uploadTask.on('state_changed',
