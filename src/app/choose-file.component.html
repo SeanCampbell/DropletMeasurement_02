@@ -5,6 +5,7 @@
         <input type="text" name="key" [value]="basename(file.value)" />
         <input #file name="file" type="file" />
         <button mat-raised-button color="primary" type="submit">UPLOAD</button><br />
+        <span #uploadProgress></span>
         <!-- <button mat-raised-button color="primary" type="submit" (click)="fileForm.submit()">UPLOAD</button><br /> -->
         <table>
             <tr><td><label>Start time</label></td><td><input #startTime type="number" value="0" /> seconds</td>

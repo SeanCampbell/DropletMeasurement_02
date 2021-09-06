@@ -1,50 +1,34 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatCard } from '@angular/material/card';
 import { MatSelectionList, MatListOption } from '@angular/material/list';
 import { SelectionModel } from '@angular/cdk/collections';
+import { initializeApp } from 'firebase/app';
+import { getFunctions, httpsCallable } from 'firebase/functions';
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { catchError } from 'rxjs/operators';
 
 import { ChooseFileService } from './choose-file.service';
-// import * as firebase from "firebase/app";
-// import 'firebase/storage';
+
+import { connectFunctionsEmulator } from 'firebase/functions';
 
 
-// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.0.1/firebase-storage.js";
+const firebaseConfig = {
+  apiKey: "AIzaSyBaQ4JDpRWBpcNdMpK1BmSSDed33hVnlqY",
+  authDomain: "droplet-measurement-a396a.firebaseapp.com",
+  databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
+  projectId: "droplet-measurement-a396a",
+  storageBucket: "droplet-measurement-a396a.appspot.com",
+  messagingSenderId: "283281649775",
+  appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
+  measurementId: "G-C43CYQP4V0"
+};
 
-// import { initializeApp } from "firebase/app";
-// import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-// import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-
-// const storage = getStorage();
-//
-// const firebaseConfig = {
-//   apiKey: "AIzaSyBaQ4JDpRWBpcNdMpK1BmSSDed33hVnlqY",
-//   authDomain: "droplet-measurement-a396a.firebaseapp.com",
-//   databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
-//   projectId: "droplet-measurement-a396a",
-//   storageBucket: "droplet-measurement-a396a.appspot.com",
-//   messagingSenderId: "283281649775",
-//   appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
-//   measurementId: "G-C43CYQP4V0"
-// };
-//
-// // Initialize Firebase
-// const app = initializeApp(firebaseConfig);
-//
-// // const storage = firebase.storage();
-// console.log('storage', storage);
-// // Create the file metadata
-// /** @type {any} */
-// const metadata = {
-//   contentType: 'image/jpeg'
-// };
-
-
-
-
-
-
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const storage = getStorage();
+const functions = getFunctions(app);
+connectFunctionsEmulator(functions, "localhost", 5001);
 
 
 interface ItemData {
@@ -75,10 +59,12 @@ export class ChooseFileComponent {
 
     @ViewChild('file', {static: true}) private fileInput: ElementRef;
     @ViewChild('fileSelection', {static: true}) private selectionList: MatSelectionList;
-    @ViewChild('startTime', {static: true}) private startTime: HTMLInputElement;
-    @ViewChild('timeInterval', {static: true}) private timeInterval: HTMLInputElement;
+    @ViewChild('startTime', {static: true}) private startTime: ElementRef;
+    @ViewChild('timeInterval', {static: true}) private timeInterval: ElementRef;
+    @ViewChild('uploadProgress', {static: true}) private uploadProgress: ElementRef;
 
-    constructor(private http: HttpClient, private fileService: ChooseFileService) {
+    constructor(private http: HttpClient, private fileService: ChooseFileService,
+                private renderer: Renderer2) {
         this.refreshFiles();
     }
 
@@ -111,19 +97,30 @@ export class ChooseFileComponent {
     }
 
     public upload() {
-        let file = this.fileInput.nativeElement.files[0];
-        console.log('fileInput', file);
+        const main = httpsCallable(functions, 'main');
+        main({
+            sourceBucket: 'mybucket',
+            sourceVideoPath: 'mypath',
+            targetWidth: 20,
+            targetHeight: 20,
+            startTimeOffsetSeconds: 0,
+            intervalSeconds: 10,
+        }).then((result) => {
+            const data = result.data;
+            console.log(data);
+        });
+
+
+        // let file = this.fileInput.nativeElement.files[0];
+        // console.log('fileInput', file);
         // const storageRef = ref(storage, file.name);
-        // console.log('##### storage', storage);
-        // console.log('##### storageRef', storageRef);
         // const uploadTask = uploadBytesResumable(storageRef, file); //, metadata);
         //
-        // // // Listen for state changes, errors, and completion of the upload.
+        // // Listen for state changes, errors, and completion of the upload.
         // uploadTask.on('state_changed',
         //   (snapshot) => {
-        //     // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //     console.log('Upload is ' + progress + '% done');
+        //     this.renderer.setProperty(this.uploadProgress.nativeElement, 'innerHTML', progress.toFixed(1) + '%');
         //     switch (snapshot.state) {
         //       case 'paused':
         //         console.log('Upload is paused');
@@ -153,9 +150,15 @@ export class ChooseFileComponent {
         //   },
         //   () => {
         //     // Upload completed successfully, now we can get the download URL
-        //     getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        //       console.log('File available at', downloadURL);
-        //     });
+        //     // getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        //     //   console.log('File available at', downloadURL);
+        //     // });
+        //     const main = httpsCallable(functions, 'main');
+        //     main()
+        //       .then((result) => {
+        //          const data = result.data;
+        //          console.log(data);
+        //       });
         //   }
         // );
 

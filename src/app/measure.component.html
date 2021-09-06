@@ -1,17 +1,15 @@
-<div class="container" fxLayout="column" fxLayoutAlign="center center">
-    <div fxLayout="row">
-    <div fxLayout="column" fxLayoutAlign="center left" fxFlex="100%">
+<!-- <div class="container" fxLayout="column" fxLayoutAlign="center center" fxFlex="100%"> -->
+<div class="container" fxLayout="column" fxFlex="100%">
+    <div fxLayout="row" fxFlex=100%>
+        <!-- <div fxLayout="column" fxLayoutAlign="center left" fxFlex="100%"> -->
+        <!-- <div fxLayout="column" fxFlex="70%"> -->
         <mat-card fxLayout="row">
             <div fxLayout="column" fxLayoutGap="10px">
-            <div fxLayout="row">
-                <droplet-canvas #dropletCanvas
-                                [imageWidth]="imageWidth" [imageHeight]=[imageHeight]
-                                [background]="canvasCarousel.selectedImage()"></droplet-canvas>
-            </div>
-            </div>
-        </mat-card>
-        <div fxLayou="row">
-            <div fxLayout="column" fxFlex="70%">
+                <div fxLayout="row">
+                    <droplet-canvas #dropletCanvas
+                                    [imageWidth]="imageWidth" [imageHeight]=[imageHeight]
+                                    [background]="canvasCarousel.selectedImage()"></droplet-canvas>
+                </div>
                 <mat-card fxLayout="row" fxLayoutGap="2px">
                     <button mat-raised-button color="primary" (click)="zoom(1.00)">100%</button>
                     <button mat-raised-button color="primary" (click)="zoom(0.75)">75%</button>
@@ -21,18 +19,22 @@
                     <button mat-raised-button color="primary" (click)="zoom(0.30)">30%</button>
                     <button mat-raised-button color="primary" (click)="zoom(0.25)">25%</button>
                 </mat-card>
+            </div>
+        </mat-card>
+        <div fxLayout="column" fxFlex="25%">
+            <div fxLayout="column">
                 <mat-card fxLayout="row" fxLayoutGap="20px">
                     <label>Live time:</label>
-                    <mat-form-field fxFlex="25%">
+                    <mat-form-field fxFlex="50%">
                         <input matInput type="number" [(ngModel)]="dropletCanvas.liveTime" name="liveTime">
                     </mat-form-field>
                 </mat-card>
                 <mat-card fxLayout="row" fxLayoutGap="20px">
                     <label>Scale:</label>
-                    <mat-form-field fxFlex="15%">
+                    <mat-form-field fxFlex="20%">
                         <input matInput type="number" [(ngModel)]="scale.value" name="scaleValue">
                     </mat-form-field>
-                    <mat-form-field fxFlex="15%">
+                    <mat-form-field fxFlex="20%">
                         <mat-select [(ngModel)]="scale.unit">
                             <mat-option *ngFor="let unit of units" [value]="unit">{{ unit }}</mat-option>
                         </mat-select>
@@ -50,7 +52,7 @@
                 </mat-card>
             </div>
         </div>
-    </div>
+    <!-- </div> -->
     <div fxLayout="column" fxFlex="10%">
         <droplet-canvas-carousel #canvasCarousel
                                  [imageWidth]="imageWidth" [imageHeight]=[imageHeight]
