@@ -5,7 +5,7 @@ main:
     - autotranscoder:
         call: http.post
         args:
-            url: https://autotranscoder-rmwldd2aha-wl.a.run.app
+            url: https://autotranscoder-aviwqsvtfq-uc.a.run.app
             body:
                 sourceBucket: ${args.sourceBucket}
                 sourceVideoPath: ${args.sourceVideoPath}
@@ -21,7 +21,7 @@ main:
     - dropletDetector:
         call: http.post
         args:
-            url: https://droplet-detector-rmwldd2aha-wl.a.run.app
+            url: https://droplet-detector-aviwqsvtfq-uc.a.run.app
             body:
                 bucket: ${autotranscoderResult.body.TargetBucket}
                 dir_path: ${autotranscoderResult.body.TargetDirPath}
