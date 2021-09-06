@@ -14,7 +14,7 @@ import { connectFunctionsEmulator } from 'firebase/functions';
 
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBaQ4JDpRWBpcNdMpK1BmSSDed33hVnlqY",
+  apiKey: "",
   authDomain: "droplet-measurement-a396a.firebaseapp.com",
   databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
   projectId: "droplet-measurement-a396a",
