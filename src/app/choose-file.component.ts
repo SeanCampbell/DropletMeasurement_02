@@ -15,20 +15,20 @@ import { connectFunctionsEmulator } from 'firebase/functions';
 
 const firebaseConfig = {
     // TODO: DELETE THIS BEFORE COMMITTING.
-    authDomain: "droplet-measurement-a396a.firebaseapp.com",
-    databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
-    projectId: "droplet-measurement-a396a",
-    storageBucket: "droplet-measurement-a396a.appspot.com",
-    messagingSenderId: "283281649775",
-    appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
-measurementId: "G-C43CYQP4V0"
+    authDomain: 'droplet-measurement-a396a.firebaseapp.com',
+    databaseURL: 'https://droplet-measurement-a396a.firebaseio.com',
+    projectId: 'droplet-measurement-a396a',
+    storageBucket: 'droplet-measurement-a396a.appspot.com',
+    messagingSenderId: '283281649775',
+    appId: '1:283281649775:web:0251413ef72a12cf3b1d9a',
+    measurementId: 'G-C43CYQP4V0',
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storage = getStorage();
 const functions = getFunctions(app);
-connectFunctionsEmulator(functions, "localhost", 5001);
+connectFunctionsEmulator(functions, 'localhost', 5001);
 
 
 interface ItemData {
@@ -36,8 +36,10 @@ interface ItemData {
 };
 
 const executeWorkflowUrl = 'https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-309203/locations/us-central1/workflows/video-processor/executions';
-const readBucketName = 'droplet-measurement-processed-public';
-const writeBucketName = 'droplet-measurement-public';
+// const readBucketName = 'droplet-measurement-processed-public';
+const readBucketName = 'droplet-measurement-processed';
+// const writeBucketName = 'droplet-measurement-public';
+const writeBucketName = 'droplet-measurement-a396a.appspot.com';
 const readGcsUrl = 'https://storage.googleapis.com/storage/v1/b/' + readBucketName + '/o';
 export const readGcsUrlPrefix = 'https://' + readBucketName + '.storage.googleapis.com/';
 export const writeGcsUrlPrefix = 'https://' + writeBucketName + '.storage.googleapis.com/';
