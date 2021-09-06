@@ -14,14 +14,14 @@ import { connectFunctionsEmulator } from 'firebase/functions';
 
 
 const firebaseConfig = {
-  apiKey: "",
-  authDomain: "droplet-measurement-a396a.firebaseapp.com",
-  databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
-  projectId: "droplet-measurement-a396a",
-  storageBucket: "droplet-measurement-a396a.appspot.com",
-  messagingSenderId: "283281649775",
-  appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
-  measurementId: "G-C43CYQP4V0"
+    // TODO: DELETE THIS BEFORE COMMITTING.
+    authDomain: "droplet-measurement-a396a.firebaseapp.com",
+    databaseURL: "https://droplet-measurement-a396a.firebaseio.com",
+    projectId: "droplet-measurement-a396a",
+    storageBucket: "droplet-measurement-a396a.appspot.com",
+    messagingSenderId: "283281649775",
+    appId: "1:283281649775:web:0251413ef72a12cf3b1d9a",
+measurementId: "G-C43CYQP4V0"
 };
 
 // Initialize Firebase
@@ -97,123 +97,60 @@ export class ChooseFileComponent {
     }
 
     public upload() {
-        const main = httpsCallable(functions, 'main');
-        main({
-            sourceBucket: 'mybucket',
-            sourceVideoPath: 'mypath',
-            targetWidth: 20,
-            targetHeight: 20,
-            startTimeOffsetSeconds: 0,
-            intervalSeconds: 10,
-        }).then((result) => {
-            const data = result.data;
-            console.log(data);
-        });
-
-
-        // let file = this.fileInput.nativeElement.files[0];
+        let file = this.fileInput.nativeElement.files[0];
         // console.log('fileInput', file);
-        // const storageRef = ref(storage, file.name);
-        // const uploadTask = uploadBytesResumable(storageRef, file); //, metadata);
-        //
-        // // Listen for state changes, errors, and completion of the upload.
-        // uploadTask.on('state_changed',
-        //   (snapshot) => {
-        //     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        //     this.renderer.setProperty(this.uploadProgress.nativeElement, 'innerHTML', progress.toFixed(1) + '%');
-        //     switch (snapshot.state) {
-        //       case 'paused':
-        //         console.log('Upload is paused');
-        //         break;
-        //       case 'running':
-        //         console.log('Upload is running');
-        //         break;
-        //     }
-        //   },
-        //   (error) => {
-        //     // A full list of error codes is available at
-        //     // https://firebase.google.com/docs/storage/web/handle-errors
-        //     switch (error.code) {
-        //       case 'storage/unauthorized':
-        //         // User doesn't have permission to access the object
-        //         break;
-        //       case 'storage/canceled':
-        //         // User canceled the upload
-        //         break;
-        //
-        //       // ...
-        //
-        //       case 'storage/unknown':
-        //         // Unknown error occurred, inspect error.serverResponse
-        //         break;
-        //     }
-        //   },
-        //   () => {
-        //     // Upload completed successfully, now we can get the download URL
-        //     // getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-        //     //   console.log('File available at', downloadURL);
-        //     // });
-        //     const main = httpsCallable(functions, 'main');
-        //     main()
-        //       .then((result) => {
-        //          const data = result.data;
-        //          console.log(data);
-        //       });
-        //   }
-        // );
+        const storageRef = ref(storage, file.name);
+        const uploadTask = uploadBytesResumable(storageRef, file); //, metadata);
 
-        // let data = new FormData();
-        // const httpOptions = {
-        //     headers: new HttpHeaders({
-        //         'Content-Type':  'multipart/form-data',
-        //         // 'Access-Control-Allow-Origin': 'localhost:4200',
-        //         // Authorization: 'my-auth-token',
-        //     }),
-        // };
-        // console.log('data', data);
-        // this.http.post(writeGcsUrlPrefix, data, httpOptions)
-        // .subscribe(done => { console.log('done!', done);});
-        //     // .pipe(
-        //     //     catchError(err => {console.log('Error uploading data:', err);})
-        //     // )
-        // return false;
+        // Listen for state changes, errors, and completion of the upload.
+        uploadTask.on('state_changed',
+          (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            this.renderer.setProperty(this.uploadProgress.nativeElement, 'innerHTML', progress.toFixed(1) + '%');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+            }
+          },
+          (error) => {
+            // A full list of error codes is available at
+            // https://firebase.google.com/docs/storage/web/handle-errors
+            switch (error.code) {
+              case 'storage/unauthorized':
+                // User doesn't have permission to access the object
+                break;
+              case 'storage/canceled':
+                // User canceled the upload
+                break;
 
-        // const httpOptions = {
-        //     headers: new HttpHeaders({
-        //         'Content-Type':  'application/json',
-        //         // "Authorization: Bearer "$(gcloud auth application-default print-access-token) \
-        //         // 'Access-Control-Allow-Origin': 'localhost:4200',
-        //         // 'Authorization': 'my-auth-token',
-        //     }),
-        // };
-        // let data = {
-        //     'argument': {
-        //         'sourceBucket': 'droplet-measurement-public',
-        //         'sourceVideoPath': 'wp 25c sopc 178 SQE002.mp4',
-        //         'targetWidth': 1952,
-        //         'targetHeight': 1952,
-        //         'startTimeOffsetSeconds': 10,
-        //         'intervalSeconds': 60,
-        //     },
-        // };
-        // this.http.post(executeWorkflowUrl, JSON.stringify(data), httpOptions)
-        //     .subscribe(response => {console.log(response)});
+              // ...
 
-        // const projectId = 'droplet-measurement-a396a';
-        // const projectId = 'droplet-measurement-a396a';
-        // const location = 'us-central1';
-        // const {WorkflowsClient} = require('@google-cloud/workflows');
-        // const client = new WorkflowsClient();
-        // async function listWorkflows() {
-        //   const [workflows] = await client.listWorkflows({
-        //     parent: client.locationPath(projectId, location),
-        //   });
-        //   for (const workflow of workflows) {
-        //     console.info(`name: ${workflow.name}`);
-        //   }
-        // }
-        // listWorkflows();
-        // }
+              case 'storage/unknown':
+                // Unknown error occurred, inspect error.serverResponse
+                break;
+            }
+          },
+          () => {
+              const main = httpsCallable(functions, 'main');
+              main({
+                  sourceBucket: writeBucketName,
+                  sourceVideoPath: file.name,
+                  // TODO: Calculate these dynamically.
+                  targetWidth: 1920,
+                  targetHeight: 1920,
+                  startTimeOffsetSeconds: parseInt(this.startTime.nativeElement.value),
+                  intervalSeconds:  parseInt(this.timeInterval.nativeElement.value),
+              }).then((result) => {
+                  const data = result.data;
+                  console.log(data);
+              });
+          }
+        );
+
         return false;
     }
 
