@@ -143,8 +143,14 @@ def find_live_time_in_image(img):
     except pytesseract.TesseractNotFoundError as e:
         logger.error('Tesseract not found, returning 0 instead: %s', e)
         return 0
+    logger.info('Found text: %s', image_text)
     lines = [v.split(':', 1) for v in image_text.split('\n')]
-    live_time = dict([(v[0], v[1].strip()) for v in lines if len(v) == 2])['Live Time']
+    live_time_dict = dict([(v[0], v[1].strip()) for v in lines if len(v) == 2])
+    if not 'Live Time' in live_time_dict:
+        logger.warning('Could not find Live Time in text. Keys: %s',
+            live_time_dict.keys())
+        return -1
+    live_time = live_time_dict['Live Time']
     live_time_segments = live_time.split('.')[0].split(':')
     live_time_seconds = (
         int(live_time_segments[0]) * 3600 +

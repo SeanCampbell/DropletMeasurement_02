@@ -13,6 +13,8 @@ main:
                 targetHeight: ${args.targetHeight}
                 startTimeOffsetSeconds: ${args.startTimeOffsetSeconds}
                 intervalSeconds: ${args.intervalSeconds}
+            auth:
+                type: OIDC
         result: autotranscoderResult
     - waitForTranscodingComplete:
         call: waitForJobCompletion
@@ -25,6 +27,8 @@ main:
             body:
                 bucket: ${autotranscoderResult.body.TargetBucket}
                 dir_path: ${autotranscoderResult.body.TargetDirPath}
+            auth:
+                type: OIDC
         result: dropletDetectorResult
     - return_result:
         return: ${dropletDetectorResult}

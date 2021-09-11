@@ -2,7 +2,7 @@ const {ExecutionsClient} = require("@google-cloud/workflows");
 const functions = require("firebase-functions");
 const cors = require("cors")({origin: true});
 
-exports.main = functions.https.onRequest((request, response) => {
+exports.processVideo = functions.https.onRequest((request, response) => {
   cors(request, response, () => {
     functions.logger.info("Request:", request.body.data);
     const projectId = "droplet-measurement-a396a";

@@ -24,7 +24,7 @@ app = flask.Flask(__name__)
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = os.environ.get(
     'GOOGLE_APPLICATION_CREDENTIALS',
-    '/app/droplet-measurement-309203-bb935e6a8a65.json')
+    '/app/droplet-measurement-a396a-9e74c8fbb3be.json')
 
 
 def process_images_from_cloud_bucket(bucket_name, img_dir):

@@ -7,7 +7,7 @@ docker tag droplet-detector gcr.io/droplet-measurement-a396a/droplet-detector &&
 docker push gcr.io/droplet-measurement-a396a/droplet-detector && \
 gcloud builds submit --tag gcr.io/droplet-measurement-a396a/droplet-detector && \
 gcloud run deploy droplet-detector --image gcr.io/droplet-measurement-a396a/droplet-detector \
-    --platform managed --max-instances 1 --concurrency 5  --allow-unauthenticated --memory 2Gi
+    --platform managed --max-instances 1 --concurrency 5 --memory 2Gi --region us-central1
 
 
 docker build -t droplet-detector . && \
@@ -27,6 +27,10 @@ curl -i -X POST localhost:8080 \
 curl -i -X POST localhost:8080 \
     -H "Content-Type: application/json" \
     -d '{"bucket": "droplet-measurement-processed-public", "dir_path": "processed/WP 30C 1POPC -CHOL 202 mOsm vs 3 mOsm pH3 in SQE/"}'
+
+curl -i -X POST localhost:8080 \
+    -H "Content-Type: application/json" \
+    -d '{"bucket": "droplet-measurement-processed", "dir_path": "processed/WP 1POPC to 2ASP pH3 19mOsm vs NaCl 208 mOsm in SQE/"}'
 
 
 ## Cleaning up local docker images

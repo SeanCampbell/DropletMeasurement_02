@@ -15,12 +15,12 @@ provider "google" {
     credentials = file("droplet-measurement-a396a-0d86c4b0cdb3.json")
 
     project = "droplet-measurement-a396a"
-    region  = "us-east1"
+    region  = "us-central1"
 }
 
 resource "google_storage_bucket" "droplet_measure_public" {
     name          = "droplet-measure-public"
-    location      = "us-east1"
+    location      = "us-central1"
     force_destroy = true
 
     uniform_bucket_level_access = true
@@ -35,7 +35,7 @@ resource "google_storage_bucket" "droplet_measure_public" {
 
 resource "google_cloud_run_service" "autotranscoder" {
     name     = "autotranscoder"
-    location = "us-east1"
+    location = "us-central1"
 
     template {
         spec {
@@ -59,7 +59,7 @@ resource "google_cloud_run_service" "autotranscoder" {
 
 resource "google_cloud_run_service" "droplet_detector" {
     name     = "droplet-detector"
-    location = "us-east1"
+    location = "us-central1"
 
     template {
         spec {
@@ -72,6 +72,7 @@ resource "google_cloud_run_service" "droplet_detector" {
                 }
             }
             container_concurrency = "5"
+            timeout_seconds = "900"
         }
         metadata {
             annotations = {
@@ -98,7 +99,7 @@ resource "google_service_account" "workflows_service_account" {
 
 resource "google_workflows_workflow" "video_processor" {
     name            = "video-processor"
-    region          = "us-east1"
+    region          = "us-central1"
     service_account = google_service_account.workflows_service_account.id
     source_contents = file("${path.module}/src/video-processor/workflow.yaml")
     depends_on = [google_project_service.workflows]

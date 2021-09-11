@@ -19,8 +19,8 @@ import (
 
 const (
     location = "us-central1"
-    projectID = "droplet-measurement-309203"
-    targetBucket = "droplet-measurement-processed-public"
+    projectID = "droplet-measurement-a396a"
+    targetBucket = "droplet-measurement-processed"
 )
 
 

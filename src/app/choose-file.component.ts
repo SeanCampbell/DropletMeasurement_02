@@ -28,14 +28,14 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const storage = getStorage();
 const functions = getFunctions(app);
-connectFunctionsEmulator(functions, 'localhost', 5001);
+// connectFunctionsEmulator(functions, 'localhost', 5001);
 
 
 interface ItemData {
     items: { name: string }[],
 };
 
-const executeWorkflowUrl = 'https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-309203/locations/us-central1/workflows/video-processor/executions';
+const executeWorkflowUrl = 'https://workflowexecutions.googleapis.com/v1beta/projects/droplet-measurement-a396a/locations/us-central1/workflows/video-processor/executions';
 // const readBucketName = 'droplet-measurement-processed-public';
 const readBucketName = 'droplet-measurement-processed';
 // const writeBucketName = 'droplet-measurement-public';
@@ -137,8 +137,8 @@ export class ChooseFileComponent {
             }
           },
           () => {
-              const main = httpsCallable(functions, 'main');
-              main({
+              const processVideo = httpsCallable(functions, 'processVideo');
+              processVideo({
                   sourceBucket: writeBucketName,
                   sourceVideoPath: file.name,
                   // TODO: Calculate these dynamically.
